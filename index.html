@@ -1,742 +1,452 @@
-<!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NurMuda — Belajar Aqidah Islam Seru untuk Remaja</title>
-  <meta name="description" content="Platform belajar Aqidah Islam yang seru, modern, dan mudah dipahami untuk remaja usia 10-18 tahun." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            teal: {
-              50: '#effcf9', 100: '#c6f7ec', 200: '#8eedda',
-              300: '#5fe3c8', 400: '#2dccac', 500: '#14b8a6',
-              600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a'
-            },
-            navy: { 700: '#1e3a5f', 800: '#162a47', 900: '#0f1d33' },
-            cream: '#fdfcf7'
-          },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-            arab: ['Amiri', 'serif']
-          }
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: #f4fbf7;
+        color: var(--text-dark);
+    }
+
+    header {
+        background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+        color: var(--text-light);
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Tabs Navigation */
+    .tabs {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+        padding: 12px 25px;
+        border: none;
+        background: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-bottom: 3px solid transparent;
+    }
+
+    .tab-btn.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .tab-content {
+        display: none;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Materi Styles */
+    .materi-nav {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .materi-btn {
+        background: var(--light-color);
+        color: var(--dark-color);
+        border: 1px solid #c8e6c9;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-align: left;
+        transition: all 0.3s;
+    }
+
+    .materi-btn:hover, .materi-btn.active {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .materi-body h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        border-bottom: 2px solid var(--light-color);
+        padding-bottom: 10px;
+    }
+
+    .materi-body p, .materi-body li {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 12px;
+    }
+
+    .materi-body ul {
+        margin-left: 20px;
+    }
+
+    /* Quiz Styles */
+    .quiz-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .question-box {
+        margin-bottom: 20px;
+    }
+
+    .options-list {
+        list-style: none;
+        margin-top: 15px;
+    }
+
+    .option-item {
+        background: #f9f9f9;
+        border: 2px solid #e0e0e0;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .option-item:hover {
+        border-color: var(--secondary-color);
+        background: var(--light-color);
+    }
+
+    .option-item.selected {
+        border-color: var(--primary-color);
+        background: #c8e6c9;
+        font-weight: 600;
+    }
+
+    .quiz-btn {
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .quiz-btn:hover {
+        background: var(--dark-color);
+    }
+
+    .result-box {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .result-box h2 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    .score-text {
+        font-size: 48px;
+        font-weight: bold;
+        color: var(--dark-color);
+        margin-bottom: 20px;
+    }
+</style>
+<header>
+    <h1><i class="fas fa-mosque"></i> Ruang Pemuda Islami</h1>
+    <p>Media Belajar Interaktif Kreatif, Seru, dan Penuh Makna</p>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('materi')"><i class="fas fa-book-open"></i> Modul Materi</button>
+        <button class="tab-btn" onclick="switchTab('quiz')"><i class="fas fa-vial"></i> Kuis Interaktif</button>
+    </div>
+
+    <div id="materi" class="tab-content active">
+        <div class="materi-nav" id="materi-menu">
+            </div>
+        <div class="materi-body" id="materi-display">
+            </div>
+    </div>
+
+    <div id="quiz" class="tab-content">
+        <div class="quiz-container" id="quiz-wrapper">
+            </div>
+    </div>
+</div>
+
+<script>
+    // DATA MATERI DAN KUIS (Sinkron Berdasarkan Modul)
+    const modulData = [
+        {
+            id: "akhlak",
+            judul: "Akhlak & Mental Health",
+            icon: "fa-heart",
+            konten: `
+                <h3>Menjaga Kesehatan Mental Lewat Sudut Pandang Islam</h3>
+                <p>Sebagai remaja, kita sering kali dihadapkan pada tekanan belajar, ekspektasi sosial, dan pencarian jati diri yang memicu stres atau <i>overthinking</i>. Islam mengajarkan bahwa kesehatan mental sangat berkaitan erat dengan ketenangan hati (<i>thuma'ninah</i>).</p>
+                <p>Berikut adalah 3 pilar utama untuk menjaga kesehatan mental sesuai syariat:</p>
+                <ul>
+                    <li><b>Dzikrullah (Mengingat Allah):</b> Dalam QS. Ar-Ra'd ayat 28 disebutkan bahwa hanya dengan mengingat Allah hati menjadi tenteram.</li>
+                    <li><b>Sabar dan Shalat:</b> Menjadikan shalat dan sabar sebagai ruang aman untuk menumpahkan segala keluh kesah (QS. Al-Baqarah: 45).</li>
+                    <li><b>Husnudzon (Berprasangka Baik):</b> Selalu yakin bahwa skenario Allah adalah yang terbaik untuk kita, sehingga terhindar dari rasa cemas berlebih atas masa depan.</li>
+                </ul>
+            `,
+            kuis: [
+                {
+                    pertanyaan: "Menurut QS. Ar-Ra'd ayat 28, apa cara utama untuk mendapatkan ketenangan hati?",
+                    opsi: [
+                        "Membaca buku motivasi",
+                        "Dzikrullah (Mengingat Allah)",
+                        "Bercerita di media sosial",
+                        "Tidur seharian penuh"
+                    ],
+                    jawaban: 1
+                },
+                {
+                    pertanyaan: "Dua hal apa yang dijadikan penolong ketika kita menghadapi masalah berdasarkan QS. Al-Baqarah ayat 45?",
+                    opsi: [
+                        "Sabar dan Shalat",
+                        "Uang dan Jabatan",
+                        "Teman dan Sahabat",
+                        "Emosi dan Logika"
+                    ],
+                    jawaban: 0
+                }
+            ]
+        },
+        {
+            id: "sirah",
+            judul: "Pemuda di Sekitar Nabi",
+            icon: "fa-user-friends",
+            konten: `
+                <h3>Inspirasi Tokoh Pemuda Hebat Generasi Sahabat</h3>
+                <p>Islam berkembang pesat berkat kontribusi luar biasa dari para remaja dan pemuda tangguh di masa Rasulullah SAW. Mereka tidak hanya ikut-ikutan, melainkan menjadi motor penggerak peradaban.</p>
+                <p>Siapa saja pahlawan muda yang wajib kita jadikan <i>role model</i>?</p>
+                <ul>
+                    <li><b>Ali bin Abi Thalib:</b> Pemuda pemberani yang siap mempertaruhkan nyawanya tidur di ranjang Rasulullah untuk mengelabui kaum kafir Quraisy saat malam hijrah di usia remaja.</li>
+                    <li><b>Mus'ab bin Umair:</b> Duta Islam pertama yang dikirim ke Madinah. Ia rela meninggalkan kehidupan mewah dan popularitas demi memperjuangkan dakwah Islam.</li>
+                    <li><b>Usamah bin Zaid:</b> Pemuda yang sudah dipercaya oleh Rasulullah untuk memimpin pasukan perang Islam melawan kekaisaran Romawi pada usia yang sangat belia, yaitu 18 tahun.</li>
+                </ul>
+            `,
+            kuis: [
+                {
+                    pertanyaan: "Siapakah nama sahabat pemuda yang menjadi Duta Islam pertama dan dikirim ke Madinah?",
+                    opsi: [
+                        "Ali bin Abi Thalib",
+                        "Usamah bin Zaid",
+                        "Mus'ab bin Umair",
+                        "Zaid bin Tsabit"
+                    ],
+                    jawaban: 2
+                },
+                {
+                    pertanyaan: "Usamah bin Zaid ditunjuk Rasulullah memimpin pasukan perang melawan Romawi pada usia...",
+                    opsi: [
+                        "25 Tahun",
+                        "18 Tahun",
+                        "30 Tahun",
+                        "15 Tahun"
+                    ],
+                    jawaban: 1
+                }
+            ]
+        },
+        {
+            id: "digital",
+            judul: "Fiqih Media Sosial",
+            icon: "fa-mobile-alt",
+            konten: `
+                <h3>Adab Berselancar di Dunia Digital Menurut Islam</h3>
+                <p>Di era digital, jempol kita mencerminkan keimanan kita. Setiap ketikan, share, maupun komentar di media sosial akan dimintai pertanggungjawabannya di akhirat kelak.</p>
+                <p>Agar aktivitas digital kita bernilai pahala, perhatikan adab-adab berikut:</p>
+                <ul>
+                    <li><b>Tabayyun (Validasi Informasi):</b> Memeriksa kebenaran sebuah berita sebelum menyebarkannya agar tidak menjadi penyebar hoax (QS. Al-Hujurat: 6).</li>
+                    <li><b>Menjaga Lisan Digital:</b> Hindari berkomentar kasar, mem-<i>bully</i> (cyberbullying), berghibah, maupun mencela orang lain.</li>
+                    <li><b>Menjaga Pandangan (Ghadhul Bashar):</b> Mengontrol apa yang kita lihat di layar HP, menghindari konten-konten yang mengumbar aurat atau maksiat.</li>
+                </ul>
+            `,
+            kuis: [
+                {
+                    pertanyaan: "Apa istilah dalam Islam untuk melakukan verifikasi atau cek fakta terhadap sebuah informasi?",
+                    opsi: [
+                        "Tafakkur",
+                        "Tabayyun",
+                        "Ta'aruf",
+                        "Tadabbur"
+                    ],
+                    jawaban: 1
+                },
+                {
+                    pertongan: "Manakah tindakan di media sosial yang mencerminkan penerapan adab Islam?",
+                    opsi: [
+                        "Ikut berkomentar di lapak orang yang sedang viral",
+                        "Menyebarkan berita tanpa membaca isi lengkapnya",
+                        "Menyaring informasi sebelum membagikannya (share)",
+                        "Membuat akun palsu untuk mengkritik orang lain"
+                    ],
+                    jawaban: 2
+                }
+            ]
         }
-      }
+    ];
+
+    // LOGIKA APLIKASI
+    let currentTab = 'materi';
+    let currentMateriIndex = 0;
+    let currentQuizQuestion = 0;
+    let totalScore = 0;
+    let selectedOption = null;
+    let kuisSemuaSoal = []; // Array gabungan semua soal dari semua modul
+
+    // Inisialisasi Awal
+    window.onload = function() {
+        renderMateriMenu();
+        tampilkanMateri(0);
+        siapkanSemuaSoalKuis();
+        renderKuis();
+    };
+
+    // Ganti Tab Utama
+    function switchTab(tabName) {
+        currentTab = tabName;
+        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', (idx === 0 && tabName === 'materi') || (idx === 1 && tabName === 'quiz'));
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.toggle('active', content.id === tabName);
+        });
+
+        if(tabName === 'quiz') {
+            resetKuis();
+        }
     }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-arab { font-family: 'Amiri', serif; }
-    .reveal { opacity: 0; transform: translateY(24px); transition: all .7s cubic-bezier(.2,.7,.3,1); }
-    .reveal.show { opacity: 1; transform: none; }
-    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-    .floaty { animation: floaty 5s ease-in-out infinite; }
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-thumb { background: #5fe3c8; border-radius: 99px; }
-    ::-webkit-scrollbar-track { background: #effcf9; }
-    .modal-body h4 { font-size: 1rem; font-weight: 700; color: #0f766e; margin-top: 1.2rem; margin-bottom: .4rem; }
-    .modal-body ul { list-style: none; padding: 0; margin: 0; }
-    .modal-body ul li { padding: .35rem 0 .35rem 1.5rem; position: relative; font-size: .9rem; color: #1e3a5f; line-height: 1.6; }
-    .modal-body ul li::before { content: '✦'; position: absolute; left: 0; color: #14b8a6; font-size: .7rem; top: .5rem; }
-    .modal-body .tag-amalan { display: inline-block; background: #effcf9; color: #0f766e; border-radius: 9999px; font-size: .75rem; font-weight: 700; padding: .2rem .75rem; margin: .15rem .1rem; }
-  </style>
-</head>
 
-<body class="bg-cream text-navy-900 antialiased selection:bg-teal-200 selection:text-navy-900">
-
-  <!-- NAVBAR -->
-  <header class="fixed top-0 inset-x-0 z-50">
-    <nav id="navbar" class="transition-all duration-300 mx-auto max-w-7xl mt-3 px-4 sm:px-6">
-      <div class="flex items-center justify-between rounded-2xl bg-white/80 backdrop-blur-md shadow-lg shadow-teal-900/5 ring-1 ring-teal-900/5 px-4 sm:px-6 py-3">
-        <a href="#home" class="flex items-center gap-2.5 shrink-0">
-          <span class="grid place-items-center h-10 w-10 rounded-xl bg-teal-500 text-white shadow-md shadow-teal-500/30">
-            <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor"><path d="M14.5 3a8 8 0 1 0 6.4 12.8A6.5 6.5 0 0 1 14.5 3Z"/><path d="M18.8 7.2l.7 1.6 1.7.2-1.3 1.2.4 1.7-1.5-.9-1.5.9.4-1.7-1.3-1.2 1.7-.2.7-1.6Z"/></svg>
-          </span>
-          <span class="text-xl font-extrabold tracking-tight">Nur<span class="text-teal-600">Muda</span></span>
-        </a>
-        <ul class="hidden md:flex items-center gap-1 text-sm font-semibold text-navy-700">
-          <li><a class="px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 transition" href="#home">Beranda</a></li>
-          <li><a class="px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 transition" href="#fitur">Fitur</a></li>
-          <li><a class="px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 transition" href="#modul">Modul</a></li>
-          <li><a class="px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 transition" href="#kuis">Kuis</a></li>
-          <li><a class="px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 transition" href="#funfact">Fun Fact</a></li>
-        </ul>
-        <div class="flex items-center gap-2">
-          <a href="#modul" class="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white text-sm font-bold px-4 py-2.5 shadow-md shadow-teal-500/30 transition active:scale-95">
-            Mulai Belajar
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <button id="menuBtn" aria-label="Buka menu" class="md:hidden grid place-items-center h-10 w-10 rounded-xl bg-teal-50 text-teal-700">
-            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-      <div id="mobileMenu" class="md:hidden hidden mt-2 rounded-2xl bg-white shadow-lg ring-1 ring-teal-900/5 p-2">
-        <a class="block px-4 py-3 rounded-xl font-semibold text-navy-700 hover:bg-teal-50" href="#home">Beranda</a>
-        <a class="block px-4 py-3 rounded-xl font-semibold text-navy-700 hover:bg-teal-50" href="#fitur">Fitur</a>
-        <a class="block px-4 py-3 rounded-xl font-semibold text-navy-700 hover:bg-teal-50" href="#modul">Modul</a>
-        <a class="block px-4 py-3 rounded-xl font-semibold text-navy-700 hover:bg-teal-50" href="#kuis">Kuis</a>
-        <a class="block px-4 py-3 rounded-xl font-semibold text-navy-700 hover:bg-teal-50" href="#funfact">Fun Fact</a>
-        <a class="block text-center mt-1 px-4 py-3 rounded-xl bg-teal-500 text-white font-bold" href="#modul">Mulai Belajar</a>
-      </div>
-    </nav>
-  </header>
-
-  <main>
-    <!-- HERO -->
-    <section id="home" class="relative overflow-hidden pt-32 pb-20 sm:pt-40">
-      <div class="pointer-events-none absolute -top-24 -right-24 h-96 w-96 rounded-full bg-teal-200/40 blur-3xl"></div>
-      <div class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-teal-100/60 blur-3xl"></div>
-      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-center">
-        <div class="reveal">
-          <span class="inline-flex items-center gap-2 rounded-full bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1.5">
-            <span class="h-2 w-2 rounded-full bg-teal-500 animate-pulse"></span>
-            Belajar Aqidah Jadi Asyik!
-          </span>
-          <h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight text-balance">
-            Yuk, Kenali <span class="text-teal-600">Islam</span> Lebih Dekat!
-          </h1>
-          <p class="mt-5 text-lg text-navy-700/80 leading-relaxed max-w-xl text-pretty">
-            Platform belajar Aqidah yang dibuat khusus buat kamu, generasi muda. Materinya santai, dalilnya shahih, kuisnya seru. Iman makin kuat, hati makin tenang.
-          </p>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a href="#modul" class="inline-flex items-center gap-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3.5 shadow-lg shadow-teal-500/30 transition active:scale-95">
-              Mulai Belajar Sekarang
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a href="#kuis" class="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-teal-50 text-navy-800 font-bold px-6 py-3.5 ring-1 ring-navy-900/10 transition active:scale-95">Coba Kuis Seru</a>
-          </div>
-          <div class="mt-10 flex items-center gap-8">
-            <div><p class="text-2xl font-extrabold text-teal-600">9+</p><p class="text-sm text-navy-700/70">Modul Belajar</p></div>
-            <div class="h-10 w-px bg-navy-900/10"></div>
-            <div><p class="text-2xl font-extrabold text-teal-600">100%</p><p class="text-sm text-navy-700/70">Dalil Shahih</p></div>
-            <div class="h-10 w-px bg-navy-900/10"></div>
-            <div><p class="text-2xl font-extrabold text-teal-600">18</p><p class="text-sm text-navy-700/70">Soal Kuis</p></div>
-          </div>
-        </div>
-        <div class="reveal relative hidden sm:block">
-          <div class="floaty relative mx-auto max-w-md">
-            <div class="rounded-3xl bg-gradient-to-br from-teal-500 to-teal-700 p-8 text-white shadow-2xl shadow-teal-700/30">
-              <div class="flex items-center gap-3">
-                <span class="grid place-items-center h-12 w-12 rounded-2xl bg-white/20">
-                  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor"><path d="M14.5 3a8 8 0 1 0 6.4 12.8A6.5 6.5 0 0 1 14.5 3Z"/></svg>
-                </span>
-                <div>
-                  <p class="font-bold text-lg">Kartu Iman Harian</p>
-                  <p class="text-white/70 text-sm">Progress kamu hari ini</p>
-                </div>
-              </div>
-              <p class="font-arab text-3xl text-right mt-6 leading-loose">لَا إِلٰهَ إِلَّا اللّٰه</p>
-              <p class="text-white/80 text-sm mt-2">"Tiada Tuhan selain Allah" — fondasi utama keimanan kita.</p>
-              <div class="mt-6">
-                <div class="flex justify-between text-xs font-semibold text-white/80"><span>Progress Belajar</span><span>75%</span></div>
-                <div class="mt-2 h-2.5 rounded-full bg-white/20 overflow-hidden">
-                  <div class="h-full w-3/4 rounded-full bg-white"></div>
-                </div>
-              </div>
-            </div>
-            <div class="absolute -top-5 -left-5 rounded-2xl bg-white shadow-xl px-4 py-3 ring-1 ring-navy-900/5">
-              <p class="text-xs font-semibold text-navy-700/70">Hari ini</p>
-              <p class="font-extrabold text-teal-600">+10 Poin Iman</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FITUR -->
-    <section id="fitur" class="py-20">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6">
-        <div class="text-center max-w-2xl mx-auto reveal">
-          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Kenapa Belajar di Sini?</h2>
-          <p class="mt-3 text-navy-700/70 text-lg">Karena belajar Aqidah nggak harus ribet dan membosankan.</p>
-        </div>
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="reveal group rounded-3xl bg-white p-7 ring-1 ring-navy-900/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
-            <span class="grid place-items-center h-14 w-14 rounded-2xl bg-teal-100 text-teal-700 group-hover:bg-teal-500 group-hover:text-white transition">
-              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.5C9 3.5 4 4 4 4v13s5-.5 8 2.5c3-3 8-2.5 8-2.5V4s-5-.5-8 2.5Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6.5v13" stroke-linecap="round"/></svg>
-            </span>
-            <h3 class="mt-5 text-xl font-bold">Pahami dengan Mudah</h3>
-            <p class="mt-2 text-navy-700/70 leading-relaxed">Materi disampaikan dengan bahasa gaul yang sopan, ringan, dan langsung nyambung sama kehidupan remaja.</p>
-          </div>
-          <div class="reveal group rounded-3xl bg-white p-7 ring-1 ring-navy-900/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
-            <span class="grid place-items-center h-14 w-14 rounded-2xl bg-teal-100 text-teal-700 group-hover:bg-teal-500 group-hover:text-white transition">
-              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6l-8-3Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <h3 class="mt-5 text-xl font-bold">Dalil Shahih</h3>
-            <p class="mt-2 text-navy-700/70 leading-relaxed">Setiap materi dilengkapi ayat Al-Qur'an dan hadis shahih, biar belajarmu berlandaskan sumber yang benar.</p>
-          </div>
-          <div class="reveal group rounded-3xl bg-white p-7 ring-1 ring-navy-900/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
-            <span class="grid place-items-center h-14 w-14 rounded-2xl bg-teal-100 text-teal-700 group-hover:bg-teal-500 group-hover:text-white transition">
-              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <h3 class="mt-5 text-xl font-bold">Kuis Seru</h3>
-            <p class="mt-2 text-navy-700/70 leading-relaxed">Uji pemahamanmu lewat 18 soal kuis interaktif dari semua modul, lengkap dengan skor dan feedback motivasi.</p>
-          </div>
-        </div>
-        <div class="reveal mt-12 rounded-3xl bg-navy-800 text-white p-8 sm:p-12 text-center relative overflow-hidden">
-          <div class="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-teal-500/20 blur-2xl"></div>
-          <svg class="mx-auto h-10 w-10 text-teal-400" viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h4v4H8c0 2 1 3 3 3v2c-3 0-5-2-5-5V7Zm8 0h4v4h-3c0 2 1 3 3 3v2c-3 0-5-2-5-5V7Z"/></svg>
-          <p class="mt-4 text-2xl sm:text-3xl font-bold leading-snug max-w-3xl mx-auto text-balance">"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya."</p>
-          <p class="mt-4 text-teal-300 font-semibold">— HR. Ahmad &amp; Thabrani</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- MODUL BELAJAR -->
-    <section id="modul" class="py-20 bg-teal-50/60">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6">
-        <div class="text-center max-w-2xl mx-auto reveal">
-          <span class="text-teal-600 font-bold text-sm uppercase tracking-wider">E-Learning</span>
-          <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Modul Belajar Aqidah</h2>
-          <p class="mt-3 text-navy-700/70 text-lg">9 modul lengkap dari Syahadat sampai Akhlak. Klik kartu untuk baca materi lengkap!</p>
-        </div>
-
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="modulGrid">
-          <!-- Cards injected by JS -->
-        </div>
-
-        <!-- Progress -->
-        <div class="reveal mt-12 rounded-3xl bg-white p-7 ring-1 ring-navy-900/5 shadow-sm">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 class="text-lg font-bold">Progress Belajarmu</h3>
-              <p class="text-sm text-navy-700/70">Buka tiap modul untuk mengisi progress. Semangat ya!</p>
-            </div>
-            <span id="progressLabel" class="text-2xl font-extrabold text-teal-600">0%</span>
-          </div>
-          <div class="mt-4 h-4 rounded-full bg-teal-50 overflow-hidden ring-1 ring-teal-100">
-            <div id="progressBar" class="h-full w-0 rounded-full bg-gradient-to-r from-teal-400 to-teal-600 transition-all duration-700"></div>
-          </div>
-          <p id="progressMsg" class="mt-3 text-sm font-semibold text-navy-700/80">Ayo mulai dari modul pertama!</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- KUIS INTERAKTIF -->
-    <section id="kuis" class="py-20">
-      <div class="mx-auto max-w-3xl px-4 sm:px-6">
-        <div class="text-center reveal">
-          <span class="text-teal-600 font-bold text-sm uppercase tracking-wider">Quiz Time</span>
-          <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Kuis Interaktif Aqidah</h2>
-          <p class="mt-3 text-navy-700/70 text-lg">18 soal dari semua modul — seberapa paham kamu?</p>
-        </div>
-        <div class="reveal mt-10 rounded-3xl bg-white ring-1 ring-navy-900/5 shadow-lg overflow-hidden">
-          <div class="h-1.5 bg-teal-50"><div id="quizProgress" class="h-full w-0 bg-teal-500 transition-all duration-500"></div></div>
-          <div class="p-7 sm:p-9">
-            <div id="quizScreen">
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-bold text-teal-600 bg-teal-50 rounded-full px-3 py-1">Soal <span id="qNumber">1</span> / <span id="qTotal">18</span></span>
-                <span class="text-sm font-semibold text-navy-700/60">Skor: <span id="liveScore">0</span></span>
-              </div>
-              <p id="qModulTag" class="mt-3 text-xs font-bold text-teal-700 bg-teal-50 rounded-full px-3 py-1 self-start inline-block"></p>
-              <h3 id="questionText" class="mt-3 text-xl font-bold leading-snug">Memuat pertanyaan...</h3>
-              <div id="optionsBox" class="mt-6 grid gap-3"></div>
-              <div id="explanationBox" class="hidden mt-4 rounded-xl bg-teal-50 border-l-4 border-teal-500 p-4 text-sm text-navy-800 leading-relaxed"></div>
-              <button id="nextBtn" class="mt-6 w-full hidden rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3.5 shadow-md shadow-teal-500/30 transition active:scale-95">Lanjut</button>
-            </div>
-            <div id="resultScreen" class="hidden text-center py-4">
-              <div id="resultEmoji" class="text-6xl">🎉</div>
-              <h3 id="resultTitle" class="mt-4 text-2xl font-extrabold">Keren Banget!</h3>
-              <p class="mt-2 text-navy-700/70">Skor akhir kamu:</p>
-              <p class="mt-1 text-5xl font-extrabold text-teal-600"><span id="finalScore">0</span><span class="text-2xl text-navy-700/40">/<span id="finalTotal">18</span></span></p>
-              <p id="resultMsg" class="mt-4 font-semibold text-navy-700/80 max-w-md mx-auto"></p>
-              <button id="restartBtn" class="mt-7 inline-flex items-center gap-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3.5 shadow-md shadow-teal-500/30 transition active:scale-95">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Main Lagi
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FUN FACT -->
-    <section id="funfact" class="py-20 bg-teal-50/60">
-      <div class="mx-auto max-w-4xl px-4 sm:px-6">
-        <div class="text-center reveal">
-          <span class="text-teal-600 font-bold text-sm uppercase tracking-wider">Daily Refresher</span>
-          <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Fun Fact Aqidah Hari Ini</h2>
-          <p class="mt-3 text-navy-700/70 text-lg">Tambah ilmu sedikit demi sedikit setiap hari. Klik tombol untuk fakta baru!</p>
-        </div>
-        <div class="reveal mt-10 rounded-3xl bg-white p-8 sm:p-10 ring-1 ring-navy-900/5 shadow-lg text-center relative overflow-hidden">
-          <div class="absolute -top-12 -left-12 h-40 w-40 rounded-full bg-teal-100 blur-2xl"></div>
-          <div class="relative">
-            <span class="grid place-items-center h-16 w-16 mx-auto rounded-2xl bg-teal-100 text-teal-600">
-              <svg class="h-9 w-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <p id="funFactText" class="mt-6 text-xl sm:text-2xl font-bold leading-snug max-w-2xl mx-auto text-balance">
-              Tahukah kamu? Rukun Iman ada 6, dan yang pertama adalah iman kepada Allah SWT.
-            </p>
-            <button id="funFactBtn" class="mt-7 inline-flex items-center gap-2 rounded-xl bg-navy-800 hover:bg-navy-900 text-white font-bold px-6 py-3.5 transition active:scale-95">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Kasih Fakta Lain!
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="bg-navy-900 text-white/80">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 py-14">
-      <div class="grid md:grid-cols-3 gap-10">
-        <div>
-          <a href="#home" class="flex items-center gap-2.5">
-            <span class="grid place-items-center h-10 w-10 rounded-xl bg-teal-500 text-white">
-              <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor"><path d="M14.5 3a8 8 0 1 0 6.4 12.8A6.5 6.5 0 0 1 14.5 3Z"/></svg>
-            </span>
-            <span class="text-xl font-extrabold text-white">Nur<span class="text-teal-400">Muda</span></span>
-          </a>
-          <p class="mt-4 text-sm leading-relaxed max-w-xs">Platform belajar Aqidah Islam yang seru, modern, dan ramah remaja. Kuatkan iman, raih masa depan.</p>
-        </div>
-        <div>
-          <h4 class="font-bold text-white">Navigasi</h4>
-          <ul class="mt-4 space-y-2.5 text-sm">
-            <li><a href="#home" class="hover:text-teal-300 transition">Beranda</a></li>
-            <li><a href="#fitur" class="hover:text-teal-300 transition">Fitur Unggulan</a></li>
-            <li><a href="#modul" class="hover:text-teal-300 transition">Modul Belajar</a></li>
-            <li><a href="#kuis" class="hover:text-teal-300 transition">Kuis Interaktif</a></li>
-            <li><a href="#funfact" class="hover:text-teal-300 transition">Fun Fact Harian</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold text-white">Tentang Pengembang</h4>
-          <div class="mt-4 rounded-2xl bg-white/5 ring-1 ring-white/10 p-5">
-            <p class="text-sm text-white/60">Developed by</p>
-            <p class="text-lg font-extrabold text-white">Avito Deanova</p>
-            <p class="text-sm font-semibold text-teal-300">NIM: K2525072</p>
-          </div>
-        </div>
-      </div>
-      <div class="mt-12 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
-        <p>&copy; <span id="year"></span> NurMuda. Hak cipta dilindungi.</p>
-        <p class="text-white/60">Developed by <span class="font-semibold text-white">Avito Deanova</span> (NIM: K2525072)</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- MODAL -->
-  <div id="modal" class="fixed inset-0 z-[60] hidden">
-    <div id="modalBackdrop" class="absolute inset-0 bg-navy-900/60 backdrop-blur-sm"></div>
-    <div class="relative min-h-full flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="w-full sm:max-w-2xl bg-cream rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[92vh] overflow-y-auto">
-        <div class="sticky top-0 bg-cream/95 backdrop-blur px-6 py-4 flex items-center justify-between border-b border-navy-900/10">
-          <h3 id="modalTitle" class="text-lg font-extrabold pr-4">Judul Modul</h3>
-          <button id="modalClose" aria-label="Tutup" class="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-navy-900/5 hover:bg-navy-900/10 transition">
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div id="modalBody" class="p-6 sm:p-8 modal-body"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT -->
-  <script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Navbar & mobile menu
-  const navbar = document.getElementById('navbar');
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  window.addEventListener('scroll', () => { if (window.scrollY > 20) navbar.classList.add('mt-0'); else navbar.classList.remove('mt-0'); });
-  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-
-  // Reveal animation
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('show'); revealObserver.unobserve(entry.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-  // ===================== DATA MODUL =====================
-  const modulData = {
-    1: {
-      title: 'Syahadat: Pintu Masuk Islam',
-      gradient: 'from-teal-500 to-teal-700',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v4M12 3l3 2M12 3 9 5"/><path d="M12 7v14"/><path d="M7 21h10"/></svg>`,
-      intro: 'Syahadat adalah dua kalimat pernyataan yang jadi pintu masuk seseorang ke dalam Islam. Tanpa syahadat, seseorang belum dianggap muslim. Yuk pahami maknanya yang dalam!',
-      poin: [
-        '<b>Syahadat Tauhid:</b> "Asyhadu allaa ilaaha illallah" — Aku bersaksi tiada Tuhan selain Allah. Ini bermakna kita hanya boleh menyembah dan memohon kepada Allah saja.',
-        '<b>Syahadat Rasul:</b> "wa asyhadu anna Muhammadan Rasuulullah" — dan aku bersaksi bahwa Muhammad adalah utusan Allah. Ini bermakna kita wajib mengikuti ajaran Nabi Muhammad ﷺ.',
-        '<b>Syarat Sah Syahadat:</b> Diucapkan dengan lisan, diyakini dalam hati, dan diamalkan dalam perbuatan.',
-        '<b>Makna Laa ilaaha illallah:</b> Meniadakan segala sesembahan selain Allah (nafi) dan menetapkan Allah sebagai satu-satunya yang berhak disembah (itsbat).',
-        '<b>Dampak di kehidupan remaja:</b> Kamu tahu ke mana minta tolong saat susah — bukan ke dukun, bukan ke benda keramat, tapi langsung ke Allah SWT.',
-        '<b>Konsekuensi Syahadat:</b> Wajib menjaga shalat, menjauhi syirik, dan berakhlak mulia sebagai bukti nyata persaksian kita.'
-      ],
-      quran: { arab: 'فَاعْلَمْ أَنَّهُ لَا إِلَٰهَ إِلَّا اللَّهُ', terjemah: '"Maka ketahuilah, bahwa sesungguhnya tidak ada Tuhan (yang haq) melainkan Allah."', sumber: 'QS. Muhammad: 19' },
-      hadis: { teks: '"Islam dibangun di atas lima perkara: bersaksi bahwa tiada ilah selain Allah dan Muhammad adalah utusan Allah, mendirikan shalat, menunaikan zakat, haji ke Baitullah, dan puasa Ramadhan."', sumber: 'HR. Bukhari & Muslim' }
-    },
-    2: {
-      title: 'Mengenal Allah Lewat Sifat-Nya',
-      gradient: 'from-teal-400 to-teal-600',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3a15 15 0 0 0 0 18M12 3a15 15 0 0 1 0 18M3 12h18"/></svg>`,
-      intro: 'Gimana mungkin kita cinta sama sesuatu yang nggak kita kenal? Yuk kenal Allah lewat nama-nama indah-Nya (Asmaul Husna)! Tiap nama adalah "petunjuk" betapa baiknya Allah ke kita.',
-      poin: [
-        '<b>Asmaul Husna</b> berjumlah 99 nama, di antaranya: Ar-Rahman (Maha Pengasih), Ar-Rahim (Maha Penyayang), Al-Malik (Maha Raja), Al-Quddus (Maha Suci), Al-Ghaffar (Maha Pengampun).',
-        '<b>Sifat Wajib Allah:</b> Wujud (Ada), Qidam (Dahulu/Azali), Baqa (Kekal), Mukhalafatu lil hawaadits (Berbeda dengan makhluk), Qiyamuhu binafsihi (Berdiri Sendiri), Wahdaniyah (Esa), Qudrat (Berkuasa), Iradat (Berkehendak), Ilmu (Mengetahui), Hayat (Hidup), Sama' (Mendengar), Bashar (Melihat), Kalam (Berfirman).',
-        '<b>Sifat Mustahil Allah</b> adalah kebalikan dari sifat wajib, seperti Adam (tidak ada), Fana (binasa), dll.',
-        '<b>Tauhid Asma wa Sifat:</b> Menetapkan nama dan sifat Allah sesuai dalil tanpa menambah, mengurangi, atau menyerupakannya dengan makhluk.',
-        '<b>Dampak kenal Allah:</b> Makin yakin Allah selalu menemani, nggak ada rasa kesepian yang mengguncang, dan hidup terasa lebih bermakna.'
-      ],
-      quran: { arab: 'وَلِلّٰهِ الْاَسْمَاۤءُ الْحُسْنٰى فَادْعُوْهُ بِهَا', terjemah: '"Dan Allah memiliki Asmaul Husna (nama-nama yang terbaik), maka bermohonlah kepada-Nya dengan menyebutnya."', sumber: 'QS. Al-A\'raf: 180' },
-      hadis: { teks: '"Sesungguhnya Allah memiliki 99 nama, seratus kurang satu. Barangsiapa menghafalnya (dan mengamalkannya), maka ia akan masuk surga."', sumber: 'HR. Bukhari & Muslim' }
-    },
-    3: {
-      title: 'Indahnya Beriman kepada Malaikat',
-      gradient: 'from-teal-500 to-navy-700',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v4M12 3l3 2M12 3 9 5"/><path d="M5 21V11l7-4 7 4v10"/><path d="M9 21v-5h6v5"/></svg>`,
-      intro: 'Ada "teman tak terlihat" yang selalu setia mencatat kebaikanmu! Beriman kepada malaikat bikin kita sadar setiap perbuatan selalu dipantau, sehingga kita jaga sikap di mana pun.',
-      poin: [
-        '<b>10 Malaikat wajib diketahui:</b> Jibril (wahyu), Mikail (rezeki), Israfil (tiup sangkakala), Izrail (cabut nyawa), Raqib (catat amal baik), Atid (catat amal buruk), Munkar & Nakir (tanya di kubur), Ridwan (penjaga surga), Malik (penjaga neraka).',
-        '<b>Sifat Malaikat:</b> Diciptakan dari cahaya, selalu taat kepada Allah, tidak punya nafsu, tidak makan/minum, tidak laki-laki/perempuan, dan selalu bertasbih.',
-        '<b>Perbedaan dengan Jin & Manusia:</b> Manusia dari tanah, jin dari api, malaikat dari cahaya — ini dalil hadis shahih.',
-        '<b>Fungsi iman kepada malaikat:</b> Membuat kita selalu merasa diawasi sehingga menjaga diri dari perbuatan dosa meskipun tidak ada orang lain yang melihat.',
-        '<b>Malaikat Hafazah:</b> Dua malaikat yang selalu mendampingi manusia — satu di kanan mencatat kebaikan, satu di kiri mencatat keburukan.',
-        '<b>Malaikat tidak dapat bermaksiat</b> kepada Allah — berbeda dengan manusia yang diberi akal dan pilihan bebas.'
-      ],
-      quran: { arab: 'اٰمَنَ الرَّسُوْلُ بِمَآ اُنْزِلَ اِلَيْهِ مِنْ رَّبِّهٖ وَالْمُؤْمِنُوْنَۗ كُلٌّ اٰمَنَ بِاللّٰهِ وَمَلٰۤىِٕكَتِهٖ', terjemah: '"Rasul (Muhammad) beriman kepada apa yang diturunkan kepadanya dari Tuhannya, demikian pula orang-orang yang beriman. Semua beriman kepada Allah, malaikat-malaikat-Nya..."', sumber: 'QS. Al-Baqarah: 285' },
-      hadis: { teks: '"Malaikat diciptakan dari cahaya, jin diciptakan dari nyala api, dan Adam diciptakan dari apa yang telah dijelaskan kepada kalian (yaitu tanah)."', sumber: 'HR. Muslim' }
-    },
-    4: {
-      title: 'Beriman kepada Kitab-Kitab Allah',
-      gradient: 'from-teal-500 to-teal-700',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 6.5C9 3.5 4 4 4 4v13s5-.5 8 2.5c3-3 8-2.5 8-2.5V4s-5-.5-8 2.5Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6.5v13" stroke-linecap="round"/></svg>`,
-      intro: 'Allah itu Maha Sayang, sampai-sampai Dia ngasih kita "buku panduan hidup" lewat para rasul. Yuk kenali kitab-kitab Allah dan kenapa Al-Qur\'an itu spesial banget!',
-      poin: [
-        '<b>4 Kitab Utama:</b> Taurat (diturunkan kepada Nabi Musa a.s.), Zabur (diturunkan kepada Nabi Dawud a.s.), Injil (diturunkan kepada Nabi Isa a.s.), dan Al-Qur\'an (diturunkan kepada Nabi Muhammad ﷺ).',
-        '<b>Keistimewaan Al-Qur\'an:</b> Satu-satunya kitab yang dijaga keasliannya oleh Allah SWT langsung, tidak ada perubahan atau pemalsuan sejak 14 abad lalu.',
-        '<b>Selain 4 kitab</b>, ada shuhuf (lembaran wahyu) yang diturunkan kepada Nabi Ibrahim dan Nabi Musa.',
-        '<b>Taurat, Zabur, dan Injil</b> sudah mengalami perubahan oleh tangan manusia — itulah kenapa Al-Qur\'an hadir sebagai penyempurna dan pelurusnya.',
-        '<b>Al-Qur\'an berisi:</b> petunjuk akidah, ibadah, muamalah, kisah para nabi, dan kabar akhirat. Berlaku untuk seluruh umat manusia hingga hari kiamat.',
-        '<b>Cara beriman kepada kitab-kitab:</b> Meyakini bahwa semua kitab berasal dari Allah, mengamalkan Al-Qur\'an sebagai pedoman hidup, dan tidak mencampuradukkan ajaran Al-Qur\'an dengan kitab yang sudah diselewengkan.'
-      ],
-      quran: { arab: 'اِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ وَاِنَّا لَهٗ لَحٰفِظُوْنَ', terjemah: '"Sesungguhnya Kamilah yang menurunkan Al-Qur\'an, dan pasti Kami (pula) yang memeliharanya."', sumber: 'QS. Al-Hijr: 9' },
-      hadis: { teks: '"Sebaik-baik kalian adalah orang yang belajar Al-Qur\'an dan mengajarkannya."', sumber: 'HR. Bukhari' }
-    },
-    5: {
-      title: 'Meneladani Para Rasul Allah',
-      gradient: 'from-teal-400 to-navy-700',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg>`,
-      intro: 'Pernah bingung nyari "role model" yang bener? Para rasul jawabannya! Mereka manusia terbaik yang diutus Allah untuk menunjukkan jalan kebenaran.',
-      poin: [
-        '<b>Jumlah Rasul:</b> Ada 25 nabi dan rasul yang wajib diketahui, mulai dari Nabi Adam a.s. hingga Nabi Muhammad ﷺ sebagai penutup para nabi.',
-        '<b>4 Sifat Wajib Rasul:</b> Shidiq (jujur), Amanah (dapat dipercaya), Tabligh (menyampaikan wahyu), Fathonah (cerdas).',
-        '<b>4 Sifat Mustahil Rasul:</b> Kadzib (bohong), Khianat (tidak amanah), Kitman (menyembunyikan wahyu), Baladah (bodoh).',
-        '<b>Ulul Azmi</b> — 5 rasul dengan keteguhan luar biasa: Nuh, Ibrahim, Musa, Isa, dan Muhammad ﷺ.',
-        '<b>Nabi Muhammad ﷺ</b> adalah nabi terakhir (khatamun nabiyyin) — tidak ada nabi setelah beliau.',
-        '<b>Cara meneladani rasul:</b> Mencontoh akhlak mulia Nabi Muhammad ﷺ dalam keseharian — jujur dalam ucapan, amanah dalam pekerjaan, sabar dalam cobaan, dan dermawan kepada sesama.',
-        '<b>Khatam Prophethood:</b> Siapapun yang mengaku nabi setelah Muhammad ﷺ adalah pendusta dan sesat.'
-      ],
-      quran: { arab: 'لَقَدْ كَانَ لَكُمْ فِيْ رَسُوْلِ اللّٰهِ اُسْوَةٌ حَسَنَةٌ', terjemah: '"Sungguh, telah ada pada (diri) Rasulullah itu suri teladan yang baik bagimu."', sumber: 'QS. Al-Ahzab: 21' },
-      hadis: { teks: '"Sesungguhnya aku diutus hanya untuk menyempurnakan akhlak yang mulia."', sumber: 'HR. Ahmad' }
-    },
-    6: {
-      title: 'Iman Hari Akhir & Takdir',
-      gradient: 'from-teal-300 to-teal-600',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      intro: 'Hidup nggak berhenti di dunia! Beriman pada hari akhir dan takdir membuat kita tenang, sabar, dan semangat berbuat baik.',
-      poin: [
-        '<b>Urutan Hari Akhir:</b> Kiamat Sugra (kematian individu) → Kiamat Kubra (kehancuran alam semesta) → Alam Barzakh (kubur) → Padang Mahsyar → Hisab (perhitungan) → Mizan (timbangan) → Shirat (jembatan) → Surga/Neraka.',
-        '<b>Tanda-tanda Kiamat Sugra:</b> maraknya maksiat, ilmu dicabut, fitnah merajalela, banyak gempa bumi.',
-        '<b>Tanda Kiamat Kubra:</b> munculnya Dajjal, turunnya Nabi Isa a.s., keluarnya Ya\'juj dan Ma\'juj, matahari terbit dari Barat.',
-        '<b>Qada & Qadar:</b> Qada adalah ketetapan Allah di Lauh Mahfuzh. Qadar adalah terwujudnya ketetapan itu di dunia. Keduanya harus kita imani.',
-        '<b>Tingkatan Iman pada Takdir:</b> Ilmu (Allah tahu segalanya), Kitabah (tertulis di Lauh Mahfuzh), Masyiah (terjadi atas kehendak Allah), Khalq (Allah yang menciptakannya).',
-        '<b>Dampak iman pada takdir:</b> Tidak sombong saat sukses (karena Allah yang memberi), tidak putus asa saat gagal (karena Allah punya rencana), dan terus berikhtiar karena takdir berubah lewat doa dan usaha.'
-      ],
-      quran: { arab: 'فَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَّرَهٗۚ وَمَنْ يَّعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَّرَهٗ', terjemah: '"Maka barangsiapa mengerjakan kebaikan seberat zarrah, niscaya dia akan melihat (balasan)-nya. Dan barangsiapa mengerjakan kejahatan seberat zarrah, niscaya dia akan melihat (balasan)-nya pula."', sumber: 'QS. Az-Zalzalah: 7-8' },
-      hadis: { teks: '"Iman itu engkau beriman kepada Allah, para malaikat-Nya, kitab-kitab-Nya, para rasul-Nya, hari akhir, dan engkau beriman kepada takdir yang baik maupun yang buruk."', sumber: 'HR. Muslim' }
-    },
-    7: {
-      title: 'Remaja Tangguh dengan Aqidah',
-      gradient: 'from-teal-300 to-teal-500',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      intro: 'Masa remaja penuh tantangan: galau, FOMO, tekanan teman sebaya, dan godaan sosmed. Di sinilah Aqidah jadi "baju besi" yang melindungi kamu!',
-      poin: [
-        '<b>Godaan remaja zaman sekarang:</b> Konten negatif di medsos, pergaulan bebas, narkoba, dan paham sesat. Aqidah yang kuat adalah benteng utamanya.',
-        '<b>Remaja dalam Al-Qur\'an:</b> Kisah para pemuda Ashabul Kahfi (QS. Al-Kahfi) — mereka memilih iman daripada kemewahan dunia dan kekuasaan raja yang zalim.',
-        '<b>Tips menjaga Aqidah remaja:</b> Rajin shalat berjamaah, punya teman yang shaleh/shalehah, ikut kajian/remaja masjid, selektif dalam memilih konten medsos.',
-        '<b>Iman sebagai "charger":</b> Iman bisa naik (dengan ibadah, ilmu, dan kebaikan) dan bisa turun (dengan maksiat dan lalai). Perlu di-charge rutin!',
-        '<b>Ghirah (semangat bela agama):</b> Sebagai remaja muslim, kita wajib bangga dengan identitas Islam dan tidak malu menunjukkan keislaman kita.',
-        '<b>Tujuh golongan yang dinaungi Allah:</b> Salah satunya adalah "syaabun nasya\'a fii ibadatillah" — pemuda yang tumbuh dalam ketaatan beribadah kepada Allah.'
-      ],
-      quran: { arab: 'يٰبُنَيَّ اَقِمِ الصَّلٰوةَ وَأْمُرْ بِالْمَعْرُوْفِ وَانْهَ عَنِ الْمُنْكَرِ وَاصْبِرْ عَلٰى مَآ اَصَابَكَ', terjemah: '"Wahai anakku! Laksanakanlah salat dan suruhlah (manusia) berbuat yang makruf dan cegahlah (mereka) dari yang mungkar dan bersabarlah terhadap apa yang menimpamu."', sumber: 'QS. Luqman: 17' },
-      hadis: { teks: '"Ada tujuh golongan yang akan dinaungi Allah pada hari yang tiada naungan selain naungan-Nya... (salah satunya) pemuda yang tumbuh dalam ketaatan beribadah kepada Allah."', sumber: 'HR. Bukhari & Muslim' }
-    },
-    8: {
-      title: 'Thaharah & Ibadah dalam Islam',
-      gradient: 'from-teal-400 to-teal-600',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 16.5C5 14.5 4 12 4 9a8 8 0 0 1 16 0c0 3-1 5.5-3 7.5" stroke-linecap="round"/><path d="M12 21v-8" stroke-linecap="round"/><path d="M9 16l3-3 3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      intro: 'Islam sangat menjunjung tinggi kebersihan — bukan hanya kebersihan fisik, tapi juga kesucian hati dan jiwa. "Kebersihan adalah sebagian dari iman!"',
-      poin: [
-        '<b>Thaharah artinya</b> bersuci. Ada dua jenis: bersuci dari hadats (kondisi yang menghalangi ibadah) dan bersuci dari najis (kotoran).',
-        '<b>Wudhu:</b> Cara bersuci dari hadats kecil, wajib sebelum shalat, thawaf, dan menyentuh Al-Qur\'an. Urutannya: niat → cuci tangan → berkumur → istinsyaq → cuci muka → cuci tangan s/d siku → usap kepala → cuci telinga → cuci kaki.',
-        '<b>Mandi Wajib (Ghusl):</b> Wajib setelah junub, haid, nifas, dan melahirkan. Dimulai dengan niat, lalu membasuh seluruh tubuh hingga merata.',
-        '<b>Tayamum:</b> Pengganti wudhu/mandi wajib saat tidak ada air atau sakit. Menggunakan debu/tanah bersih.',
-        '<b>Rukun Islam 5 perkara:</b> Syahadat, Shalat 5 waktu, Zakat, Puasa Ramadhan, Haji (bagi yang mampu).',
-        '<b>Shalat 5 waktu:</b> Subuh (2 rakaat), Dzuhur (4 rakaat), Ashar (4 rakaat), Maghrib (3 rakaat), Isya (4 rakaat). Total 17 rakaat sehari semalam.',
-        '<b>Hikmah Thaharah:</b> Menjaga kesehatan, melatih kedisiplinan, dan sebagai simbol bahwa Islam adalah agama yang bersih dan teratur.'
-      ],
-      quran: { arab: 'اِنَّ اللّٰهَ يُحِبُّ التَّوَّابِيْنَ وَيُحِبُّ الْمُتَطَهِّرِيْنَ', terjemah: '"Sesungguhnya Allah menyukai orang-orang yang bertobat dan menyukai orang-orang yang menyucikan diri."', sumber: 'QS. Al-Baqarah: 222' },
-      hadis: { teks: '"Kebersihan adalah sebagian dari iman, dan ucapan alhamdulillah memenuhi timbangan, subhanallah dan alhamdulillah keduanya memenuhi — atau salah satunya memenuhi — apa yang ada di antara langit dan bumi."', sumber: 'HR. Muslim' }
-    },
-    9: {
-      title: 'Akhlak Islami: Karakter Remaja Mulia',
-      gradient: 'from-teal-500 to-navy-800',
-      icon: `<svg class="h-14 w-14 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke-linecap="round"/></svg>`,
-      intro: 'Aqidah yang benar harus berbuah akhlak yang mulia! Nabi Muhammad ﷺ diutus untuk menyempurnakan akhlak. Akhlak bagus = iman yang terwujud nyata.',
-      poin: [
-        '<b>Akhlak kepada Allah:</b> Taat beribadah, bersyukur, bersabar, tawadhu (rendah hati), dan tidak meminta selain kepada Allah.',
-        '<b>Akhlak kepada Rasulullah ﷺ:</b> Mencintai dan menghormati beliau, mengikuti sunnahnya, memperbanyak shalawat, dan membela kehormatannya.',
-        '<b>Akhlak kepada Orang Tua:</b> Birrul walidain — berbakti kepada kedua orang tua. Tidak membentak, mendoakan, membantu, dan mematuhi selama bukan maksiat.',
-        '<b>Akhlak kepada Sesama:</b> Jujur, amanah, tidak ghibah (bergosip), tidak hasad (dengki), memaafkan, saling membantu, dan menghormati yang lebih tua.',
-        '<b>Akhlak terhadap lingkungan:</b> Tidak merusak alam, tidak buang sampah sembarangan — bumi adalah amanah dari Allah.',
-        '<b>Akhlak di media sosial (remaja zaman now):</b> Tidak menyebarkan hoaks, tidak cyberbullying, tidak pamer (riya), dan menggunakan medsos untuk kebaikan.',
-        '<b>Hubungan Aqidah dan Akhlak:</b> Aqidah adalah akar, akhlak adalah buah. Pohon iman yang baik pasti berbuah akhlak yang indah.'
-      ],
-      quran: { arab: 'وَاِنَّكَ لَعَلٰى خُلُقٍ عَظِيْمٍ', terjemah: '"Dan sesungguhnya engkau (Muhammad) benar-benar berbudi pekerti yang agung."', sumber: 'QS. Al-Qalam: 4' },
-      hadis: { teks: '"Orang mukmin yang paling sempurna imannya adalah yang paling baik akhlaknya. Dan sebaik-baik kalian adalah yang paling baik terhadap istrinya (keluarganya)."', sumber: 'HR. Tirmidzi' }
+    // Render Menu Samping/Atas Materi
+    function renderMateriMenu() {
+        const menuContainer = document.getElementById('materi-menu');
+        menuContainer.innerHTML = '';
+        modulData.forEach((modul, index) => {
+            const button = document.createElement('button');
+            button.className = `materi-btn ${index === 0 ? 'active' : ''}`;
+            button.id = `materi-btn-${index}`;
+            button.innerHTML = `<i class="fas ${modul.icon}"></i> ${modul.judul}`;
+            button.onclick = () => tampilkanMateri(index);
+            menuContainer.appendChild(button);
+        });
     }
-  };
 
-  // ===================== RENDER KARTU MODUL =====================
-  const modulGrid = document.getElementById('modulGrid');
-  Object.entries(modulData).forEach(([id, data]) => {
-    modulGrid.innerHTML += `
-      <article class="reveal rounded-3xl bg-white ring-1 ring-navy-900/5 shadow-sm overflow-hidden flex flex-col">
-        <div class="h-32 bg-gradient-to-br ${data.gradient} grid place-items-center">${data.icon}</div>
-        <div class="p-6 flex flex-col flex-1">
-          <span class="text-xs font-bold text-teal-600 bg-teal-50 rounded-full px-2.5 py-1 self-start">Modul ${id}</span>
-          <h3 class="mt-3 text-lg font-bold">${data.title}</h3>
-          <p class="mt-2 text-sm text-navy-700/70 leading-relaxed flex-1">${data.intro.substring(0, 120)}...</p>
-          <button data-modul="${id}" class="open-modul mt-4 inline-flex items-center gap-1.5 text-teal-700 font-bold text-sm hover:gap-2.5 transition-all">
-            Baca Materi <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-      </article>`;
-  });
+    // Tampilkan Isi Materi
+    function tampilkanMateri(index) {
+        currentMateriIndex = index;
+        document.querySelectorAll('.materi-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === index);
+        });
+        document.getElementById('materi-display').innerHTML = modulData[index].konten;
+    }
 
-  // Re-observe new cards
-  document.querySelectorAll('.reveal').forEach(el => { if (!el.classList.contains('show')) revealObserver.observe(el); });
+    // Mengumpulkan semua kuis dari tiap modul ke dalam satu array besar
+    function siapkanSemuaSoalKuis() {
+        kuisSemuaSoal = [];
+        modulData.forEach(modul => {
+            modul.kuis.forEach(soal => {
+                kuisSemuaSoal.push(soal);
+            });
+        });
+    }
 
-  // ===================== MODAL =====================
-  const modulDibuka = new Set();
-  const totalModul = Object.keys(modulData).length;
-  const modal = document.getElementById('modal');
-  const modalBody = document.getElementById('modalBody');
-  const modalTitle = document.getElementById('modalTitle');
+    // Reset Kuis dari Awal
+    function resetKuis() {
+        currentQuizQuestion = 0;
+        totalScore = 0;
+        selectedOption = null;
+        renderKuis();
+    }
 
-  function renderModul(id) {
-    const data = modulData[id];
-    modalTitle.textContent = `Modul ${id}: ${data.title}`;
-    const poinHTML = data.poin.map(p => `<li>${p}</li>`).join('');
-    modalBody.innerHTML = `
-      <p class="text-navy-700/80 leading-relaxed">${data.intro}</p>
-      <h4>📌 Poin-Poin Penting</h4>
-      <ul>${poinHTML}</ul>
-      <div class="mt-6 rounded-2xl bg-teal-600 text-white p-6 shadow-lg shadow-teal-700/20">
-        <div class="flex items-center gap-2 text-teal-100 text-sm font-bold uppercase tracking-wide">
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.5C9 3.5 4 4 4 4v13s5-.5 8 2.5c3-3 8-2.5 8-2.5V4s-5-.5-8 2.5Z"/></svg>
-          Dalil Al-Qur'an
-        </div>
-        <p class="font-arab text-2xl sm:text-3xl text-right mt-4 leading-loose">${data.quran.arab}</p>
-        <p class="mt-4 text-white/90 italic leading-relaxed">${data.quran.terjemah}</p>
-        <p class="mt-3 text-sm font-bold text-teal-200">${data.quran.sumber}</p>
-      </div>
-      <blockquote class="mt-5 rounded-2xl bg-white ring-1 ring-navy-900/10 border-l-4 border-teal-500 p-6 shadow-sm">
-        <div class="flex items-center gap-2 text-teal-700 text-sm font-bold uppercase tracking-wide">
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6l-8-3Z"/></svg>
-          Hadis Shahih
-        </div>
-        <p class="mt-3 text-navy-800 leading-relaxed">${data.hadis.teks}</p>
-        <footer class="mt-3 text-sm font-bold text-teal-700">— ${data.hadis.sumber}</footer>
-      </blockquote>
-      <div class="mt-6 rounded-2xl bg-teal-50 p-4 text-center text-sm font-semibold text-teal-800">
-        ✅ Mantap! Kamu sudah menyelesaikan modul ini. Progress belajarmu bertambah!
-      </div>`;
-  }
+    // Render Halaman Kuis (Pertanyaan & Pilihan)
+    function renderKuis() {
+        const container = document.getElementById('quiz-wrapper');
+        
+        if (currentQuizQuestion >= kuisSemuaSoal.length) {
+            // Tampilkan Hasil Akhir jika soal habis
+            const nilaiAkhir = Math.round((totalScore / kuisSemuaSoal.length) * 100);
+            container.innerHTML = `
+                <div class="result-box">
+                    <h2><i class="fas fa-trophy"></i> Kuis Selesai!</h2>
+                    <p>Kamu telah menyelesaikan kuis dari seluruh modul materi.</p>
+                    <div class="score-text">${nilaiAkhir}</div>
+                    <p>Skor Benar: ${totalScore} dari ${kuisSemuaSoal.length} Soal</p>
+                    <button class="quiz-btn" style="margin-top:20px;" onclick="resetKuis()">Ulangi Kuis</button>
+                </div>
+            `;
+            return;
+        }
 
-  function openModal(id) {
-    renderModul(id);
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    if (!modulDibuka.has(id)) { modulDibuka.add(id); updateProgress(); }
-  }
-  function closeModal() { modal.classList.add('hidden'); document.body.style.overflow = ''; }
+        const dataSoal = kuisSemuaSoal[currentQuizQuestion];
+        selectedOption = null;
 
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.open-modul');
-    if (btn) openModal(btn.dataset.modul);
-  });
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  document.getElementById('modalBackdrop').addEventListener('click', closeModal);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        container.innerHTML = `
+            <div class="question-box">
+                <span style="color: var(--primary-color); font-weight:600;">Pertanyaan ${currentQuizQuestion + 1} dari ${kuisSemuaSoal.length}</span>
+                <h3 style="margin-top:10px; font-size:18px;">${dataSoal.pertanyaan}</h3>
+                <ul class="options-list">
+                    ${dataSoal.opsi.map((opsi, idx) => `
+                        <li class="option-item" id="opt-${idx}" onclick="pilihJawaban(${idx})">${opsi}</li>
+                    `).join('')}
+                </ul>
+                <button class="quiz-btn" id="next-btn" onclick="prosesJawaban()" disabled style="background:#ccc; cursor:not-allowed;">Pilih Jawaban Dulu</button>
+            </div>
+        `;
+    }
 
-  const progressBar = document.getElementById('progressBar');
-  const progressLabel = document.getElementById('progressLabel');
-  const progressMsg = document.getElementById('progressMsg');
-  function updateProgress() {
-    const percent = Math.round((modulDibuka.size / totalModul) * 100);
-    progressBar.style.width = percent + '%';
-    progressLabel.textContent = percent + '%';
-    if (percent === 0) progressMsg.textContent = 'Ayo mulai dari modul pertama!';
-    else if (percent < 100) progressMsg.textContent = `Hebat! Kamu sudah menyelesaikan ${modulDibuka.size} dari ${totalModul} modul. Lanjutkan!`;
-    else progressMsg.textContent = 'MasyaAllah! Semua modul selesai. Kamu remaja tangguh!';
-  }
+    // Aksi Memilih Salah Satu Opsi
+    function pilihJawaban(index) {
+        selectedOption = index;
+        document.querySelectorAll('.option-item').forEach((item, idx) => {
+            item.classList.toggle('selected', idx === index);
+        });
+        
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.disabled = false;
+        nextBtn.style.background = 'var(--primary-color)';
+        nextBtn.style.cursor = 'pointer';
+        nextBtn.innerText = currentQuizQuestion === kuisSemuaSoal.length - 1 ? "Lihat Hasil" : "Pertanyaan Selanjutnya";
+    }
 
-  // ===================== KUIS (18 SOAL) =====================
-  const questions = [
-    // Modul 1 - Syahadat
-    { modul: 'Modul 1: Syahadat', q: 'Syahadat terdiri dari berapa kalimat persaksian?', options: ['Satu kalimat', 'Dua kalimat', 'Tiga kalimat', 'Empat kalimat'], answer: 1, explain: 'Syahadat terdiri dari dua kalimat: Syahadat Tauhid (bersaksi tiada Tuhan selain Allah) dan Syahadat Rasul (bersaksi Muhammad adalah utusan Allah).' },
-    { modul: 'Modul 1: Syahadat', q: 'Makna "Laa ilaaha illallah" adalah...', options: ['Allah Maha Besar', 'Tiada Tuhan yang berhak disembah selain Allah', 'Segala puji bagi Allah', 'Maha Suci Allah'], answer: 1, explain: '"Laa ilaaha" berarti meniadakan segala sesembahan selain Allah (nafi), "illallah" menetapkan hanya Allah yang berhak disembah (itsbat).' },
-    // Modul 2 - Asmaul Husna & Sifat Allah
-    { modul: 'Modul 2: Mengenal Allah', q: 'Kumpulan nama-nama indah milik Allah disebut...', options: ['Rukun Islam', 'Asmaul Husna', 'Sifat Wajib Rasul', 'Al-Kutub'], answer: 1, explain: 'Asmaul Husna adalah 99 nama-nama indah Allah. Barang siapa menghafalnya dan mengamalkannya akan masuk surga (HR. Bukhari & Muslim).' },
-    { modul: 'Modul 2: Mengenal Allah', q: 'Sifat wajib bagi Allah yang berarti "Allah itu ada" adalah...', options: ['Qidam', 'Baqa', 'Wujud', 'Wahdaniyah'], answer: 2, explain: 'Wujud artinya Ada. Allah pasti ada, terbukti dari adanya alam semesta ini yang tidak mungkin ada tanpa Pencipta.' },
-    // Modul 3 - Malaikat
-    { modul: 'Modul 3: Malaikat', q: 'Malaikat yang bertugas menyampaikan wahyu kepada para nabi adalah...', options: ['Mikail', 'Israfil', 'Izrail', 'Jibril'], answer: 3, explain: 'Malaikat Jibril adalah perantara wahyu dari Allah kepada para nabi dan rasul, termasuk menyampaikan Al-Qur\'an kepada Nabi Muhammad ﷺ.' },
-    { modul: 'Modul 3: Malaikat', q: 'Malaikat diciptakan oleh Allah dari...', options: ['Tanah liat', 'Nyala api', 'Cahaya', 'Air'], answer: 2, explain: 'HR. Muslim: "Malaikat diciptakan dari cahaya, jin dari nyala api, dan Adam dari tanah."' },
-    // Modul 4 - Kitab Allah
-    { modul: 'Modul 4: Kitab Allah', q: 'Kitab Zabur diturunkan kepada Nabi...', options: ['Musa a.s.', 'Isa a.s.', 'Dawud a.s.', 'Ibrahim a.s.'], answer: 2, explain: 'Kitab Zabur diturunkan kepada Nabi Dawud a.s., Taurat kepada Nabi Musa a.s., Injil kepada Nabi Isa a.s., dan Al-Qur\'an kepada Nabi Muhammad ﷺ.' },
-    { modul: 'Modul 4: Kitab Allah', q: 'Kitab suci yang dijaga keasliannya oleh Allah hingga hari kiamat adalah...', options: ['Taurat', 'Injil', 'Zabur', 'Al-Qur\'an'], answer: 3, explain: 'QS. Al-Hijr: 9 — "Sesungguhnya Kamilah yang menurunkan Al-Qur\'an, dan pasti Kami yang memeliharanya." Hanya Al-Qur\'an yang terjaga otentisitasnya.' },
-    // Modul 5 - Rasul
-    { modul: 'Modul 5: Rasul Allah', q: 'Nabi dan rasul terakhir yang diutus Allah adalah...', options: ['Nabi Isa a.s.', 'Nabi Musa a.s.', 'Nabi Muhammad ﷺ', 'Nabi Ibrahim a.s.'], answer: 2, explain: 'Nabi Muhammad ﷺ adalah khatamun nabiyyin (penutup para nabi). Tidak ada nabi atau rasul setelah beliau hingga hari kiamat.' },
-    { modul: 'Modul 5: Rasul Allah', q: '"Shidiq" adalah sifat wajib rasul yang artinya...', options: ['Cerdas', 'Menyampaikan', 'Jujur', 'Dapat dipercaya'], answer: 2, explain: 'Shidiq = Jujur. Amanah = Dapat dipercaya. Tabligh = Menyampaikan wahyu. Fathonah = Cerdas. Keempatnya adalah sifat wajib rasul.' },
-    { modul: 'Modul 5: Rasul Allah', q: 'Rasul-rasul yang memiliki keteguhan luar biasa disebut...', options: ['Ulul Albab', 'Ulul Azmi', 'Ulul Amri', 'Ulil Arham'], answer: 1, explain: 'Ulul Azmi adalah 5 rasul dengan keteguhan dan kesabaran luar biasa: Nabi Nuh, Ibrahim, Musa, Isa, dan Muhammad ﷺ.' },
-    // Modul 6 - Hari Akhir & Takdir
-    { modul: 'Modul 6: Hari Akhir & Takdir', q: 'Rukun Iman dalam Islam berjumlah...', options: ['4 perkara', '5 perkara', '6 perkara', '7 perkara'], answer: 2, explain: 'Rukun Iman ada 6: iman kepada Allah, malaikat, kitab-kitab, rasul-rasul, hari akhir, dan qada & qadar (takdir baik maupun buruk).' },
-    { modul: 'Modul 6: Hari Akhir & Takdir', q: 'Beriman kepada qada dan qadar membuat seorang muslim menjadi...', options: ['Malas berusaha karena semua sudah ditakdirkan', 'Tenang, sabar, dan tetap berikhtiar lalu bertawakal', 'Selalu menyalahkan keadaan', 'Tidak peduli dengan hasil apapun'], answer: 1, explain: 'Iman pada takdir mengajarkan keseimbangan: berusaha sungguh-sungguh (ikhtiar), berdoa, lalu menyerahkan hasilnya kepada Allah (tawakal). Tidak pasif, tidak sombong.' },
-    // Modul 7 - Remaja & Aqidah
-    { modul: 'Modul 7: Remaja & Aqidah', q: 'Kisah pemuda Ashabul Kahfi terdapat dalam surah...', options: ['Al-Baqarah', 'Al-Kahfi', 'Luqman', 'Yusuf'], answer: 1, explain: 'QS. Al-Kahfi menceritakan sekelompok pemuda beriman yang memilih berlindung di gua daripada mengikuti raja yang zalim demi mempertahankan aqidah mereka.' },
-    // Modul 8 - Thaharah & Ibadah
-    { modul: 'Modul 8: Thaharah & Ibadah', q: 'Bersuci yang digunakan saat tidak ada air atau kondisi sakit disebut...', options: ['Wudhu', 'Mandi Wajib', 'Tayamum', 'Istinja'], answer: 2, explain: 'Tayamum adalah rukhshah (keringanan) dari Allah untuk bersuci menggunakan debu/tanah bersih ketika tidak ada air atau tidak mampu menggunakan air karena sakit.' },
-    { modul: 'Modul 8: Thaharah & Ibadah', q: 'Jumlah total rakaat shalat 5 waktu dalam sehari semalam adalah...', options: ['15 rakaat', '16 rakaat', '17 rakaat', '20 rakaat'], answer: 2, explain: 'Subuh 2 + Dzuhur 4 + Ashar 4 + Maghrib 3 + Isya 4 = 17 rakaat total shalat fardhu sehari semalam.' },
-    // Modul 9 - Akhlak
-    { modul: 'Modul 9: Akhlak Islami', q: '"Birrul walidain" berarti...', options: ['Bersedekah kepada fakir miskin', 'Berbakti kepada kedua orang tua', 'Berjihad di jalan Allah', 'Berdoa di malam hari'], answer: 1, explain: 'Birrul walidain = berbakti kepada orang tua. Ini adalah amalan yang sangat tinggi nilainya, bahkan disebutkan langsung setelah perintah menyembah Allah dalam Al-Qur\'an.' },
-    { modul: 'Modul 9: Akhlak Islami', q: 'Nabi Muhammad ﷺ bersabda bahwa beliau diutus untuk...', options: ['Menaklukkan seluruh bangsa', 'Menyempurnakan akhlak yang mulia', 'Membawa kemakmuran ekonomi', 'Membangun kerajaan Islam'], answer: 1, explain: 'HR. Ahmad: "Sesungguhnya aku diutus hanya untuk menyempurnakan akhlak yang mulia." Ini menunjukkan betapa pentingnya akhlak dalam Islam.' }
-  ];
+    // Proses Jawaban dan Lanjut Soal Berikutnya
+    function prosesJawaban() {
+        if (selectedOption === null) return;
 
-  let currentQ = 0, score = 0, answered = false;
-  const quizScreen = document.getElementById('quizScreen');
-  const resultScreen = document.getElementById('resultScreen');
-  const questionText = document.getElementById('questionText');
-  const optionsBox = document.getElementById('optionsBox');
-  const nextBtn = document.getElementById('nextBtn');
-  const qNumber = document.getElementById('qNumber');
-  const qTotal = document.getElementById('qTotal');
-  const liveScore = document.getElementById('liveScore');
-  const quizProgress = document.getElementById('quizProgress');
-  const qModulTag = document.getElementById('qModulTag');
-  const explanationBox = document.getElementById('explanationBox');
+        const dataSoal = kuisSemuaSoal[currentQuizQuestion];
+        if (selectedOption === dataSoal.jawaban) {
+            totalScore++;
+        }
 
-  qTotal.textContent = questions.length;
-  document.getElementById('finalTotal').textContent = questions.length;
-
-  function showQuestion() {
-    answered = false;
-    const current = questions[currentQ];
-    qNumber.textContent = currentQ + 1;
-    liveScore.textContent = score;
-    questionText.textContent = current.q;
-    qModulTag.textContent = current.modul;
-    quizProgress.style.width = (currentQ / questions.length * 100) + '%';
-    nextBtn.classList.add('hidden');
-    explanationBox.classList.add('hidden');
-    optionsBox.innerHTML = '';
-    current.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'text-left rounded-xl bg-cream ring-1 ring-navy-900/10 px-5 py-4 font-semibold text-navy-800 hover:ring-teal-400 hover:bg-teal-50 transition flex items-center gap-3';
-      btn.innerHTML = `<span class="grid place-items-center h-7 w-7 shrink-0 rounded-lg bg-white ring-1 ring-navy-900/10 text-sm font-bold">${String.fromCharCode(65+i)}</span><span>${opt}</span>`;
-      btn.addEventListener('click', () => selectAnswer(i));
-      optionsBox.appendChild(btn);
-    });
-  }
-
-  function selectAnswer(selectedIndex) {
-    if (answered) return;
-    answered = true;
-    const correct = questions[currentQ].answer;
-    const allBtns = optionsBox.querySelectorAll('button');
-    allBtns.forEach((b, i) => {
-      b.disabled = true;
-      if (i === correct) {
-        b.className = 'text-left rounded-xl bg-teal-500 text-white px-5 py-4 font-semibold flex items-center gap-3 ring-2 ring-teal-600';
-        b.querySelector('span:first-child').className = 'grid place-items-center h-7 w-7 shrink-0 rounded-lg bg-white/25 text-sm font-bold';
-      } else if (i === selectedIndex && i !== correct) {
-        b.className = 'text-left rounded-xl bg-red-500 text-white px-5 py-4 font-semibold flex items-center gap-3 ring-2 ring-red-600';
-        b.querySelector('span:first-child').className = 'grid place-items-center h-7 w-7 shrink-0 rounded-lg bg-white/25 text-sm font-bold';
-      } else { b.classList.add('opacity-50'); }
-    });
-    if (selectedIndex === correct) { score++; liveScore.textContent = score; }
-    // Show explanation
-    explanationBox.textContent = '💡 ' + questions[currentQ].explain;
-    explanationBox.classList.remove('hidden');
-    nextBtn.textContent = currentQ === questions.length - 1 ? 'Lihat Hasil' : 'Lanjut';
-    nextBtn.classList.remove('hidden');
-  }
-
-  nextBtn.addEventListener('click', () => {
-    if (currentQ < questions.length - 1) { currentQ++; showQuestion(); } else { showResult(); }
-  });
-
-  function showResult() {
-    quizScreen.classList.add('hidden');
-    resultScreen.classList.remove('hidden');
-    quizProgress.style.width = '100%';
-    document.getElementById('finalScore').textContent = score;
-    const emoji = document.getElementById('resultEmoji');
-    const title = document.getElementById('resultTitle');
-    const msg = document.getElementById('resultMsg');
-    const pct = score / questions.length;
-    if (pct === 1) { emoji.textContent = '🏆'; title.textContent = 'Sempurna!'; msg.textContent = 'MasyaAllah, semua jawaban benar! Aqidahmu benar-benar kuat. Pertahankan dan terus sebarkan ilmu ini ya!'; }
-    else if (pct >= 0.8) { emoji.textContent = '🌟'; title.textContent = 'Hampir Sempurna!'; msg.textContent = 'Keren banget! Tinggal sedikit lagi. Yuk buka ulang modul yang soalnya kamu salah, pasti bisa sempurna!'; }
-    else if (pct >= 0.6) { emoji.textContent = '😊'; title.textContent = 'Bagus, Terus Belajar!'; msg.textContent = 'Sudah lumayan paham. Masih ada beberapa yang perlu diperdalam. Buka modul belajarnya lagi yuk!'; }
-    else { emoji.textContent = '💪'; title.textContent = 'Yuk Belajar Lagi!'; msg.textContent = 'Nggak apa-apa, semua proses butuh waktu. Buka modul dari awal dan coba kuis ini sekali lagi. Kamu pasti bisa!'; }
-  }
-
-  document.getElementById('restartBtn').addEventListener('click', () => {
-    currentQ = 0; score = 0;
-    resultScreen.classList.add('hidden');
-    quizScreen.classList.remove('hidden');
-    showQuestion();
-  });
-  showQuestion();
-
-  // ===================== FUN FACT =====================
-  const funFacts = [
-    'Rukun Iman ada 6: iman kepada Allah, malaikat, kitab, rasul, hari akhir, dan qada & qadar.',
-    'Asmaul Husna (nama-nama indah Allah) berjumlah 99 nama.',
-    'Kalimat "Laa ilaaha illallah" adalah inti dari Aqidah Islam.',
-    'Malaikat diciptakan dari cahaya, jin dari api, dan manusia dari tanah (HR. Muslim).',
-    'Iman bisa naik karena ketaatan dan turun karena maksiat — perlu terus dijaga!',
-    'Al-Qur\'an adalah kitab suci terakhir yang dijaga keasliannya oleh Allah sampai akhir zaman.',
-    'Total rakaat shalat 5 waktu dalam sehari semalam adalah 17 rakaat.',
-    'Tauhid terbagi tiga: Rububiyah, Uluhiyah, dan Asma wa Sifat.',
-    'Nabi Muhammad ﷺ adalah khatamun nabiyyin — penutup para nabi, tidak ada nabi setelahnya.',
-    'Ulul Azmi adalah 5 rasul paling teguh: Nuh, Ibrahim, Musa, Isa, dan Muhammad ﷺ.',
-    'Beriman kepada hari akhir membuat kita semangat berbuat baik dan menjauhi keburukan.',
-    'Pemuda yang tumbuh dalam ketaatan kepada Allah termasuk 7 golongan yang dinaungi Allah di hari kiamat.',
-    '"Kebersihan adalah sebagian dari iman" — Islam sangat mementingkan thaharah (bersuci).',
-    'Birrul walidain (berbakti kepada orang tua) adalah amalan yang disebut langsung setelah perintah menyembah Allah.',
-    'Syahadat yang benar harus diucapkan lisan, diyakini hati, dan diamalkan dalam perbuatan.'
-  ];
-  const funFactText = document.getElementById('funFactText');
-  const funFactBtn = document.getElementById('funFactBtn');
-  let lastFact = -1;
-  funFactBtn.addEventListener('click', () => {
-    let idx;
-    do { idx = Math.floor(Math.random() * funFacts.length); } while (idx === lastFact && funFacts.length > 1);
-    lastFact = idx;
-    funFactText.style.opacity = 0;
-    setTimeout(() => { funFactText.textContent = 'Tahukah kamu? ' + funFacts[idx]; funFactText.style.transition = 'opacity .4s'; funFactText.style.opacity = 1; }, 200);
-  });
-  </script>
-</body>
-</html>
+        currentQuizQuestion++;
+        renderKuis();
+    }
+</script>
