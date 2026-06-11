@@ -1,452 +1,713 @@
-* {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-        background-color: #f4fbf7;
-        color: var(--text-dark);
-    }
-
-    header {
-        background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
-        color: var(--text-light);
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .container {
-        max-width: 1000px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
-
-    /* Tabs Navigation */
-    .tabs {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 25px;
-        background: #fff;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .tab-btn {
-        padding: 12px 25px;
-        border: none;
-        background: none;
-        font-size: 16px;
-        font-weight: 600;
-        color: #666;
-        cursor: pointer;
-        transition: all 0.3s;
-        border-bottom: 3px solid transparent;
-    }
-
-    .tab-btn.active {
-        color: var(--primary-color);
-        border-bottom-color: var(--primary-color);
-    }
-
-    .tab-content {
-        display: none;
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    /* Materi Styles */
-    .materi-nav {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-
-    .materi-btn {
-        background: var(--light-color);
-        color: var(--dark-color);
-        border: 1px solid #c8e6c9;
-        padding: 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        text-align: left;
-        transition: all 0.3s;
-    }
-
-    .materi-btn:hover, .materi-btn.active {
-        background: var(--primary-color);
-        color: #fff;
-    }
-
-    .materi-body h3 {
-        color: var(--primary-color);
-        margin-bottom: 15px;
-        border-bottom: 2px solid var(--light-color);
-        padding-bottom: 10px;
-    }
-
-    .materi-body p, .materi-body li {
-        font-size: 16px;
-        line-height: 1.6;
-        margin-bottom: 12px;
-    }
-
-    .materi-body ul {
-        margin-left: 20px;
-    }
-
-    /* Quiz Styles */
-    .quiz-container {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .question-box {
-        margin-bottom: 20px;
-    }
-
-    .options-list {
-        list-style: none;
-        margin-top: 15px;
-    }
-
-    .option-item {
-        background: #f9f9f9;
-        border: 2px solid #e0e0e0;
-        padding: 12px 20px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .option-item:hover {
-        border-color: var(--secondary-color);
-        background: var(--light-color);
-    }
-
-    .option-item.selected {
-        border-color: var(--primary-color);
-        background: #c8e6c9;
-        font-weight: 600;
-    }
-
-    .quiz-btn {
-        background: var(--primary-color);
-        color: #fff;
-        border: none;
-        padding: 12px 25px;
-        font-size: 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .quiz-btn:hover {
-        background: var(--dark-color);
-    }
-
-    .result-box {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .result-box h2 {
-        color: var(--primary-color);
-        margin-bottom: 15px;
-    }
-
-    .score-text {
-        font-size: 48px;
-        font-weight: bold;
-        color: var(--dark-color);
-        margin-bottom: 20px;
-    }
-</style>
-<header>
-    <h1><i class="fas fa-mosque"></i> Ruang Pemuda Islami</h1>
-    <p>Media Belajar Interaktif Kreatif, Seru, dan Penuh Makna</p>
-</header>
-
-<div class="container">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('materi')"><i class="fas fa-book-open"></i> Modul Materi</button>
-        <button class="tab-btn" onclick="switchTab('quiz')"><i class="fas fa-vial"></i> Kuis Interaktif</button>
-    </div>
-
-    <div id="materi" class="tab-content active">
-        <div class="materi-nav" id="materi-menu">
-            </div>
-        <div class="materi-body" id="materi-display">
-            </div>
-    </div>
-
-    <div id="quiz" class="tab-content">
-        <div class="quiz-container" id="quiz-wrapper">
-            </div>
-    </div>
-</div>
-
-<script>
-    // DATA MATERI DAN KUIS (Sinkron Berdasarkan Modul)
-    const modulData = [
-        {
-            id: "akhlak",
-            judul: "Akhlak & Mental Health",
-            icon: "fa-heart",
-            konten: `
-                <h3>Menjaga Kesehatan Mental Lewat Sudut Pandang Islam</h3>
-                <p>Sebagai remaja, kita sering kali dihadapkan pada tekanan belajar, ekspektasi sosial, dan pencarian jati diri yang memicu stres atau <i>overthinking</i>. Islam mengajarkan bahwa kesehatan mental sangat berkaitan erat dengan ketenangan hati (<i>thuma'ninah</i>).</p>
-                <p>Berikut adalah 3 pilar utama untuk menjaga kesehatan mental sesuai syariat:</p>
-                <ul>
-                    <li><b>Dzikrullah (Mengingat Allah):</b> Dalam QS. Ar-Ra'd ayat 28 disebutkan bahwa hanya dengan mengingat Allah hati menjadi tenteram.</li>
-                    <li><b>Sabar dan Shalat:</b> Menjadikan shalat dan sabar sebagai ruang aman untuk menumpahkan segala keluh kesah (QS. Al-Baqarah: 45).</li>
-                    <li><b>Husnudzon (Berprasangka Baik):</b> Selalu yakin bahwa skenario Allah adalah yang terbaik untuk kita, sehingga terhindar dari rasa cemas berlebih atas masa depan.</li>
-                </ul>
-            `,
-            kuis: [
-                {
-                    pertanyaan: "Menurut QS. Ar-Ra'd ayat 28, apa cara utama untuk mendapatkan ketenangan hati?",
-                    opsi: [
-                        "Membaca buku motivasi",
-                        "Dzikrullah (Mengingat Allah)",
-                        "Bercerita di media sosial",
-                        "Tidur seharian penuh"
-                    ],
-                    jawaban: 1
-                },
-                {
-                    pertanyaan: "Dua hal apa yang dijadikan penolong ketika kita menghadapi masalah berdasarkan QS. Al-Baqarah ayat 45?",
-                    opsi: [
-                        "Sabar dan Shalat",
-                        "Uang dan Jabatan",
-                        "Teman dan Sahabat",
-                        "Emosi dan Logika"
-                    ],
-                    jawaban: 0
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AqidahVerse - Serunya Belajar Aqidah Islam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        darknavy: '#0f172a',
+                        modernteal: '#0d9488',
+                        lightteal: '#ccfbf1',
+                        softgreen: '#22c55e',
+                    }
                 }
-            ]
-        },
-        {
-            id: "sirah",
-            judul: "Pemuda di Sekitar Nabi",
-            icon: "fa-user-friends",
-            konten: `
-                <h3>Inspirasi Tokoh Pemuda Hebat Generasi Sahabat</h3>
-                <p>Islam berkembang pesat berkat kontribusi luar biasa dari para remaja dan pemuda tangguh di masa Rasulullah SAW. Mereka tidak hanya ikut-ikutan, melainkan menjadi motor penggerak peradaban.</p>
-                <p>Siapa saja pahlawan muda yang wajib kita jadikan <i>role model</i>?</p>
-                <ul>
-                    <li><b>Ali bin Abi Thalib:</b> Pemuda pemberani yang siap mempertaruhkan nyawanya tidur di ranjang Rasulullah untuk mengelabui kaum kafir Quraisy saat malam hijrah di usia remaja.</li>
-                    <li><b>Mus'ab bin Umair:</b> Duta Islam pertama yang dikirim ke Madinah. Ia rela meninggalkan kehidupan mewah dan popularitas demi memperjuangkan dakwah Islam.</li>
-                    <li><b>Usamah bin Zaid:</b> Pemuda yang sudah dipercaya oleh Rasulullah untuk memimpin pasukan perang Islam melawan kekaisaran Romawi pada usia yang sangat belia, yaitu 18 tahun.</li>
-                </ul>
-            `,
-            kuis: [
-                {
-                    pertanyaan: "Siapakah nama sahabat pemuda yang menjadi Duta Islam pertama dan dikirim ke Madinah?",
-                    opsi: [
-                        "Ali bin Abi Thalib",
-                        "Usamah bin Zaid",
-                        "Mus'ab bin Umair",
-                        "Zaid bin Tsabit"
-                    ],
-                    jawaban: 2
-                },
-                {
-                    pertanyaan: "Usamah bin Zaid ditunjuk Rasulullah memimpin pasukan perang melawan Romawi pada usia...",
-                    opsi: [
-                        "25 Tahun",
-                        "18 Tahun",
-                        "30 Tahun",
-                        "15 Tahun"
-                    ],
-                    jawaban: 1
-                }
-            ]
-        },
-        {
-            id: "digital",
-            judul: "Fiqih Media Sosial",
-            icon: "fa-mobile-alt",
-            konten: `
-                <h3>Adab Berselancar di Dunia Digital Menurut Islam</h3>
-                <p>Di era digital, jempol kita mencerminkan keimanan kita. Setiap ketikan, share, maupun komentar di media sosial akan dimintai pertanggungjawabannya di akhirat kelak.</p>
-                <p>Agar aktivitas digital kita bernilai pahala, perhatikan adab-adab berikut:</p>
-                <ul>
-                    <li><b>Tabayyun (Validasi Informasi):</b> Memeriksa kebenaran sebuah berita sebelum menyebarkannya agar tidak menjadi penyebar hoax (QS. Al-Hujurat: 6).</li>
-                    <li><b>Menjaga Lisan Digital:</b> Hindari berkomentar kasar, mem-<i>bully</i> (cyberbullying), berghibah, maupun mencela orang lain.</li>
-                    <li><b>Menjaga Pandangan (Ghadhul Bashar):</b> Mengontrol apa yang kita lihat di layar HP, menghindari konten-konten yang mengumbar aurat atau maksiat.</li>
-                </ul>
-            `,
-            kuis: [
-                {
-                    pertanyaan: "Apa istilah dalam Islam untuk melakukan verifikasi atau cek fakta terhadap sebuah informasi?",
-                    opsi: [
-                        "Tafakkur",
-                        "Tabayyun",
-                        "Ta'aruf",
-                        "Tadabbur"
-                    ],
-                    jawaban: 1
-                },
-                {
-                    pertongan: "Manakah tindakan di media sosial yang mencerminkan penerapan adab Islam?",
-                    opsi: [
-                        "Ikut berkomentar di lapak orang yang sedang viral",
-                        "Menyebarkan berita tanpa membaca isi lengkapnya",
-                        "Menyaring informasi sebelum membagikannya (share)",
-                        "Membuat akun palsu untuk mengkritik orang lain"
-                    ],
-                    jawaban: 2
-                }
-            ]
+            }
         }
-    ];
+    </script>
+    <style>
+        /* Custom scrollbar biar makin estetik */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
-    // LOGIKA APLIKASI
-    let currentTab = 'materi';
-    let currentMateriIndex = 0;
-    let currentQuizQuestion = 0;
-    let totalScore = 0;
-    let selectedOption = null;
-    let kuisSemuaSoal = []; // Array gabungan semua soal dari semua modul
-
-    // Inisialisasi Awal
-    window.onload = function() {
-        renderMateriMenu();
-        tampilkanMateri(0);
-        siapkanSemuaSoalKuis();
-        renderKuis();
-    };
-
-    // Ganti Tab Utama
-    function switchTab(tabName) {
-        currentTab = tabName;
-        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-            btn.classList.toggle('active', (idx === 0 && tabName === 'materi') || (idx === 1 && tabName === 'quiz'));
-        });
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.toggle('active', content.id === tabName);
-        });
-
-        if(tabName === 'quiz') {
-            resetKuis();
-        }
-    }
-
-    // Render Menu Samping/Atas Materi
-    function renderMateriMenu() {
-        const menuContainer = document.getElementById('materi-menu');
-        menuContainer.innerHTML = '';
-        modulData.forEach((modul, index) => {
-            const button = document.createElement('button');
-            button.className = `materi-btn ${index === 0 ? 'active' : ''}`;
-            button.id = `materi-btn-${index}`;
-            button.innerHTML = `<i class="fas ${modul.icon}"></i> ${modul.judul}`;
-            button.onclick = () => tampilkanMateri(index);
-            menuContainer.appendChild(button);
-        });
-    }
-
-    // Tampilkan Isi Materi
-    function tampilkanMateri(index) {
-        currentMateriIndex = index;
-        document.querySelectorAll('.materi-btn').forEach((btn, idx) => {
-            btn.classList.toggle('active', idx === index);
-        });
-        document.getElementById('materi-display').innerHTML = modulData[index].konten;
-    }
-
-    // Mengumpulkan semua kuis dari tiap modul ke dalam satu array besar
-    function siapkanSemuaSoalKuis() {
-        kuisSemuaSoal = [];
-        modulData.forEach(modul => {
-            modul.kuis.forEach(soal => {
-                kuisSemuaSoal.push(soal);
-            });
-        });
-    }
-
-    // Reset Kuis dari Awal
-    function resetKuis() {
-        currentQuizQuestion = 0;
-        totalScore = 0;
-        selectedOption = null;
-        renderKuis();
-    }
-
-    // Render Halaman Kuis (Pertanyaan & Pilihan)
-    function renderKuis() {
-        const container = document.getElementById('quiz-wrapper');
-        
-        if (currentQuizQuestion >= kuisSemuaSoal.length) {
-            // Tampilkan Hasil Akhir jika soal habis
-            const nilaiAkhir = Math.round((totalScore / kuisSemuaSoal.length) * 100);
-            container.innerHTML = `
-                <div class="result-box">
-                    <h2><i class="fas fa-trophy"></i> Kuis Selesai!</h2>
-                    <p>Kamu telah menyelesaikan kuis dari seluruh modul materi.</p>
-                    <div class="score-text">${nilaiAkhir}</div>
-                    <p>Skor Benar: ${totalScore} dari ${kuisSemuaSoal.length} Soal</p>
-                    <button class="quiz-btn" style="margin-top:20px;" onclick="resetKuis()">Ulangi Kuis</button>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('home')">
+                    <div class="bg-teal-600 text-white p-2.5 rounded-2xl shadow-md shadow-teal-600/30">
+                        <i class="fa-solid fa-kaaba text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-slate-900 tracking-tight">Aqidah<span class="text-teal-600">Verse</span></span>
                 </div>
-            `;
-            return;
-        }
+                
+                <div class="hidden md:flex items-center gap-8 font-medium">
+                    <button onclick="showSection('home')" class="nav-link text-teal-600 hover:text-teal-700 transition">Beranda</button>
+                    <button onclick="showSection('modul')" class="nav-link text-slate-600 hover:text-teal-600 transition">Modul Belajar</button>
+                    <button onclick="showSection('kuis')" class="nav-link text-slate-600 hover:text-teal-600 transition">Kuis Interaktif</button>
+                </div>
 
-        const dataSoal = kuisSemuaSoal[currentQuizQuestion];
-        selectedOption = null;
+                <div class="hidden md:flex">
+                    <button onclick="showSection('modul')" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-teal-600/20 transition-all transform hover:-translate-y-0.5">
+                        Mulai Belajar <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                    </button>
+                </div>
 
-        container.innerHTML = `
-            <div class="question-box">
-                <span style="color: var(--primary-color); font-weight:600;">Pertanyaan ${currentQuizQuestion + 1} dari ${kuisSemuaSoal.length}</span>
-                <h3 style="margin-top:10px; font-size:18px;">${dataSoal.pertanyaan}</h3>
-                <ul class="options-list">
-                    ${dataSoal.opsi.map((opsi, idx) => `
-                        <li class="option-item" id="opt-${idx}" onclick="pilihJawaban(${idx})">${opsi}</li>
-                    `).join('')}
-                </ul>
-                <button class="quiz-btn" id="next-btn" onclick="prosesJawaban()" disabled style="background:#ccc; cursor:not-allowed;">Pilih Jawaban Dulu</button>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-slate-600 p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
-        `;
-    }
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-4 space-y-3 shadow-inner">
+            <button onclick="showSection('home')" class="block w-full text-left py-2 px-3 text-slate-600 rounded-lg hover:bg-teal-50">Beranda</button>
+            <button onclick="showSection('modul')" class="block w-full text-left py-2 px-3 text-slate-600 rounded-lg hover:bg-teal-50">Modul Belajar</button>
+            <button onclick="showSection('kuis')" class="block w-full text-left py-2 px-3 text-slate-600 rounded-lg hover:bg-teal-50">Kuis Interaktif</button>
+            <button onclick="showSection('modul')" class="block w-full text-center bg-teal-600 text-white py-2.5 rounded-xl font-medium">Mulai Belajar</button>
+        </div>
+    </nav>
 
-    // Aksi Memilih Salah Satu Opsi
-    function pilihJawaban(index) {
-        selectedOption = index;
-        document.querySelectorAll('.option-item').forEach((item, idx) => {
-            item.classList.toggle('selected', idx === index);
-        });
-        
-        const nextBtn = document.getElementById('next-btn');
-        nextBtn.disabled = false;
-        nextBtn.style.background = 'var(--primary-color)';
-        nextBtn.style.cursor = 'pointer';
-        nextBtn.innerText = currentQuizQuestion === kuisSemuaSoal.length - 1 ? "Lihat Hasil" : "Pertanyaan Selanjutnya";
-    }
+    <main>
 
-    // Proses Jawaban dan Lanjut Soal Berikutnya
-    function prosesJawaban() {
-        if (selectedOption === null) return;
+        <section id="section-home" class="space-y-24 pb-24">
+            
+            <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-850 to-teal-950 text-white pt-16 pb-24 px-4 sm:px-6 lg:px-8">
+                <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full filter blur-[120px] pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/10 rounded-full filter blur-[100px] pointer-events-none"></div>
 
-        const dataSoal = kuisSemuaSoal[currentQuizQuestion];
-        if (selectedOption === dataSoal.jawaban) {
-            totalScore++;
+                <div class="max-w-7xl mx-auto grid md:grid-columns grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+                    <div class="space-y-6 text-center md:text-left">
+                        <span class="inline-flex items-center gap-2 bg-teal-500/20 border border-teal-500/30 text-teal-300 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide">
+                            <i class="fa-solid fa-sparkles"></i> Akidah untuk Generasi Z & Alpha
+                        </span>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Yuk, Kenali Islam <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">Lebih Dekat & Seru!</span>
+                        </h1>
+                        <p class="text-slate-300 text-lg max-w-xl mx-auto md:mx-0 font-light leading-relaxed">
+                            Belajar pondasi keimanan (Aqidah) nggak melulu ngebosenin. Di sini, kita bakal bahas tuntas esensi iman dengan gaya yang santai, visual keren, dan relevan sama kehidupan harianmu!
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
+                            <button onclick="showSection('modul')" class="bg-teal-500 hover:bg-teal-400 text-slate-950 px-8 py-4 rounded-full text-lg font-bold shadow-xl shadow-teal-500/20 transition-all transform hover:-translate-y-1">
+                                Jelajahi Modul <i class="fa-solid fa-compass ml-2"></i>
+                            </button>
+                            <button onclick="showSection('kuis')" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-8 py-4 rounded-full text-lg font-bold transition-all transform hover:-translate-y-1">
+                                Uji Kemampuan <i class="fa-solid fa-gamepad ml-2 text-teal-400"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <div class="w-full max-w-md bg-slate-800/60 p-6 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl transform rotate-1 hover:rotate-0 transition-all duration-500">
+                            <div class="flex gap-2 mb-4">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="bg-slate-900/90 rounded-2xl p-5 space-y-4 text-sm font-mono text-teal-400">
+                                <p><span class="text-slate-500">// Status Belajar Kamu</span></p>
+                                <p><span class="text-pink-400">const</span> remaja = { nama: <span class="text-amber-300">"Kamu"</span>, status: <span class="text-amber-300">"Sangat Keren"</span> };</p>
+                                <p><span class="text-pink-400">if</span> (pahamAqidah) {</p>
+                                <p class="pl-4 text-emerald-400">hidup jadi_tenang_dan_terarah();</p>
+                                <p>}</p>
+                                <div class="bg-teal-950/50 border border-teal-800 rounded-xl p-4 text-xs font-sans text-slate-200 flex items-center gap-3">
+                                    <i class="fa-solid fa-bolt text-xl text-amber-400 animate-pulse"></i>
+                                    <div>
+                                        <p class="font-bold text-teal-300">Fun Fact Hari Ini!</p>
+                                        <p class="text-slate-400 text-[11px]" id="hero-fact">Mengisi loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">Kenapa Harus Belajar di AqidahVerse?</h2>
+                    <p class="text-slate-500">Kami mengemas materi berbobot tinggi dengan penyampaian ramah milenial dan Gen-Z.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-teal-100 transition duration-300 group">
+                        <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:bg-teal-600 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pahami dengan Mudah</h3>
+                        <p class="text-slate-500 leading-relaxed">Nggak ada istilah bahasa yang rumit membingungkan. Semua dijelaskan pakai analogi santai ala tongkrongan positif.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-teal-100 transition duration-300 group">
+                        <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:bg-emerald-600 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-scroll"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Dalil Shahih & Otentik</h3>
+                        <p class="text-slate-500 leading-relaxed">Setiap poin didukung penuh oleh teks Al-Qur'an dan Hadis riwayat shahih yang jelas keasliannya.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-teal-100 transition duration-300 group">
+                        <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6 group-hover:bg-amber-600 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Kuis & Reward Seru</h3>
+                        <p class="text-slate-500 leading-relaxed">Uji hasil belajarmu dengan kuis interaktif ber-skor otomatis demi memicu motivasi berkompetisi dalam kebaikan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-8 sm:p-12 text-white shadow-xl shadow-teal-700/20 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full filter blur-xl"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div class="space-y-3 text-center md:text-left">
+                            <span class="bg-white/20 text-white font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full">
+                                <i class="fa-solid fa-lightbulb mr-1"></i> Daily Refresher
+                            </span>
+                            <h3 class="text-2xl sm:text-3xl font-bold">Wawasan Kilat Hari Ini</h3>
+                            <p class="text-teal-50 max-w-xl font-light" id="daily-fact-box">
+                                "Tahukah kamu? Kata 'Aqidah' diambil dari kata 'Al-Iqdu' yang berarti ikatan kokoh. Jadi aqidah adalah ikatan hati yang nggak bisa lepas dari keimanan!"
+                            </p>
+                        </div>
+                        <button onclick="changeFact()" class="bg-white hover:bg-teal-50 text-teal-700 px-6 py-3.5 rounded-2xl font-bold whitespace-nowrap shadow-md active:scale-95 transition">
+                            <i class="fa-solid fa-rotate mr-2"></i> Mau Fakta Lain!
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <i class="fa-solid fa-quote-left text-4xl text-teal-200 mb-4 block"></i>
+                <p class="text-xl sm:text-2xl font-medium text-slate-700 italic leading-relaxed">
+                    "Iman itu bukan cuma angan-angan kosong, melainkan sesuatu yang tertanam kuat di dalam lubuk hati paling dalam dan dibuktikan secara nyata lewat perbuatan harian kita."
+                </p>
+                <span class="text-slate-400 block mt-4 text-sm font-semibold tracking-wider">— Al-Hasan al-Bashri</span>
+            </div>
+
+        </section>
+
+
+        <section id="section-modul" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+            
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 tracking-tight">E-Learning Aqidah</h2>
+                    <p class="text-slate-500 mt-1">Pilih salah satu modul di bawah ini untuk belajar mendalam.</p>
+                </div>
+                <div class="w-full sm:w-72 bg-slate-100 p-4 rounded-2xl border border-slate-200/60">
+                    <div class="flex justify-between text-xs font-bold text-slate-600 mb-2">
+                        <span>Progress Belajarmu</span>
+                        <span id="progress-text">33% Completed</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-500 w-1/3 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <div class="space-y-3 lg:col-span-1">
+                    <button id="btn-m1" onclick="selectModul(1)" class="w-full text-left p-5 rounded-2xl border transition duration-200 font-bold flex items-center gap-4 bg-teal-600 border-teal-600 text-white shadow-lg shadow-teal-600/10">
+                        <span class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center"><i class="fa-solid fa-heart-pulse"></i></span>
+                        <span class="text-sm">1. Mengenal Allah Swt.</span>
+                    </button>
+                    <button id="btn-m2" onclick="selectModul(2)" class="w-full text-left p-5 rounded-2xl border transition duration-200 font-bold flex items-center gap-4 bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <span class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center"><i class="fa-solid fa-shield-halved"></i></span>
+                        <span class="text-sm">2. Beriman kepada Malaikat</span>
+                    </button>
+                    <button id="btn-m3" onclick="selectModul(3)" class="w-full text-left p-5 rounded-2xl border transition duration-200 font-bold flex items-center gap-4 bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <span class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></span>
+                        <span class="text-sm">3. Remaja Tangguh Ber-Aqidah</span>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-3 bg-white p-8 sm:p-10 rounded-3xl border border-slate-100 shadow-sm min-h-[500px]">
+                    
+                    <div id="materi-1" class="materi-content space-y-6">
+                        <div class="border-b border-slate-100 pb-4">
+                            <span class="text-teal-600 font-bold text-xs uppercase tracking-wider">Modul Utama 01</span>
+                            <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Mengenal Allah Lewat Sifat-Nya</h3>
+                        </div>
+                        
+                        <p class="text-slate-600 leading-relaxed">
+                            Pernah nggak sih kamu mikir, gimana caranya kita bisa kenal dekat sama pencipta alam semesta ini kalau wujud-Nya nggak bisa kita lihat langsung sekarang? Jawabannya gampang: **lewat tanda-tanda kebesaran-Nya dan nama serta sifat-Nya (Asmaul Husna)**. Kenal Allah itu langkah paling pertama biar hidup kita punya tujuan pasti dan nggak gampang galau terombang-ambing tren zaman!
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-2 h-6 bg-teal-500 rounded-full"></span> 3 Cara Mengenal Allah (Ma'rifatullah)
+                            </h4>
+                            <ul class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <li class="p-4 bg-slate-50 rounded-2xl border border-slate-150">
+                                    <strong class="text-teal-700 block mb-1">1. Ayat Kauniyah</strong>
+                                    Melihat keteraturan alam semesta, bintang, planet, sampai sistem canggih di tubuh kita sendiri.
+                                </li>
+                                <li class="p-4 bg-slate-50 rounded-2xl border border-slate-150">
+                                    <strong class="text-teal-700 block mb-1">2. Ayat Qauliyah</strong>
+                                    Membaca, merenungkan, dan memahami isi firman-firman Allah yang termaktub di dalam Al-Qur'an.
+                                </li>
+                                <li class="p-4 bg-slate-50 rounded-2xl border border-slate-150">
+                                    <strong class="text-teal-700 block mb-1">3. Asmaul Husna</strong>
+                                    Mempelajari keindahan 99 nama baik Allah dan mengamalkannya dalam bentuk doa sehari-hari.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-6 shadow-inner space-y-4 border border-teal-900">
+                            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-400"><i class="fa-solid fa-book-quran mr-1"></i> Dalil Al-Qur'an (QS. Thaha: 14)</span>
+                                <span class="bg-teal-500/20 text-teal-300 text-[10px] px-2 py-0.5 rounded-full font-mono">Shahih</span>
+                            </div>
+                            <p class="text-right font-serif text-2xl leading-loose tracking-wide pt-2 text-emerald-300">
+                                إِنَّنِي أَنَا اللَّهُ لَا إِلَٰهَ إِلَّا أَنَا فَاعْبُدْنِي وَأَقِمِ الصَّلَاةَ لِذِكْرِي
+                            </p>
+                            <p class="text-slate-300 text-sm italic font-light leading-relaxed">
+                                "Sungguh, Aku ini Allah, tidak ada tuhan selain Aku, maka sembahlah Aku dan laksanakanlah shalat untuk mengingat-Ku."
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm leading-relaxed flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation text-lg text-amber-600 mt-0.5"></i>
+                            <div>
+                                <strong>Catatan Penting:</strong> Memahami tauhid (mengesakan Allah) itu ngebuat kita merdeka mental. Kita nggak bakal takut sama hantu, sial, ramalan zodiak, atau tekanan sesama makhluk karena kita tahu penentu segalanya cuma Allah SWT.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="materi-2" class="materi-content hidden space-y-6">
+                        <div class="border-b border-slate-100 pb-4">
+                            <span class="text-teal-600 font-bold text-xs uppercase tracking-wider">Modul Utama 02</span>
+                            <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Indahnya Beriman kepada Malaikat</h3>
+                        </div>
+                        
+                        <p class="text-slate-600 leading-relaxed">
+                            Malaikat itu makhluk gaib ciptaan Allah yang dibuat dari cahaya (*nur*). Berbeda dengan manusia yang punya nafsu untuk membangkang, malaikat itu makhluk paling loyal yang super patuh dan selalu bertasbih siang malam tanpa henti. Mempercayai eksistensi mereka bakal bikin hidup kita jadi lebih mawas diri sekaligus merasa aman.
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-2 h-6 bg-teal-500 rounded-full"></span> Efek Nyata dalam Sikap Sehari-hari (CCTV Ilahi)
+                            </h4>
+                            <p class="text-slate-600 text-sm">
+                                Sadar atau nggak, kita itu dikawal ketat 24 jam non-stop! Mengetahui ada Malaikat **Raqib** dan **Atid** yang mencatat amal perbuatan harusnya bikin kita mikir dua kali kalau mau berbuat maksiat atau ngetik komentar jahat di medsos. Gak ada aksi yang lolos sensor!
+                            </p>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-6 shadow-inner space-y-4 border border-teal-900">
+                            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-400"><i class="fa-solid fa-book-quran mr-1"></i> Dalil Al-Qur'an (QS. Qaf: 18)</span>
+                                <span class="bg-teal-500/20 text-teal-300 text-[10px] px-2 py-0.5 rounded-full font-mono">Shahih</span>
+                            </div>
+                            <p class="text-right font-serif text-2xl leading-loose tracking-wide pt-2 text-emerald-300">
+                                مَا يَلْفِظُ مِنْ قَوْلٍ إِلَّا لَدَيْهِ رَقِيبٌ عَتِيدٌ
+                            </p>
+                            <p class="text-slate-300 text-sm italic font-light leading-relaxed">
+                                "Tidak ada suatu kata yang diucapkannya melainkan ada di sisinya malaikat pengawas yang selalu siap (mencatat)."
+                            </p>
+                        </div>
+
+                        <div class="bg-teal-50 p-5 rounded-2xl border border-teal-150">
+                            <h5 class="font-bold text-teal-900 mb-2">Tugas Utama Malaikat Terpopuler:</h5>
+                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-700">
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100"><b>Jibril:</b> Menyampaikan Wahyu</div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100"><b>Mikail:</b> Membagikan Rezeki & Hujan</div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100"><b>Israfil:</b> Meniap Sangkakala</div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100"><b>Izrail:</b> Mencabut Nyawa</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="materi-3" class="materi-content hidden space-y-6">
+                        <div class="border-b border-slate-100 pb-4">
+                            <span class="text-teal-600 font-bold text-xs uppercase tracking-wider">Modul Utama 03</span>
+                            <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Remaja Tangguh dengan Aqidah</h3>
+                        </div>
+                        
+                        <p class="text-slate-600 leading-relaxed">
+                            Zaman sekarang godaan buat kena krisis identitas, kesehatan mental memburuk, atau ikut pergaulan bebas itu kenceng banget. Di sinilah fungsi utama **Aqidah Islam**. Aqidah bukan sekadar hafalan teori rukun iman, tapi jadi "Sistem Operasi" (OS) dalam diri kamu. Kalau OS jiwamu kokoh dan bebas dari virus, kamu bakal tumbuh jadi remaja yang visioner, tangguh, berprestasi, sekaligus dicintai Allah.
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-2 h-6 bg-teal-500 rounded-full"></span> Gimana Caranya Memperkuat Pondasi Iman?
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100/80 flex gap-4">
+                                    <div class="text-teal-600 text-lg font-bold">01</div>
+                                    <div><strong class="text-slate-900 block">Filter Pertemanan</strong> Pilih lingkungan sirkel pertemanan yang saling ngingetin ke kebaikan, bukan yang ngajakin toxic atau buang-buang waktu.</div>
+                                </div>
+                                <div class="p-4 bg-teal-50/50 rounded-xl border border-teal-100/80 flex gap-4">
+                                    <div class="text-teal-600 text-lg font-bold">02</div>
+                                    <div><strong class="text-slate-900 block">Jaga Shalat 5 Waktu</strong> Shalat itu charger energi spiritual utama kita. Kalo shalatmu jebol, pertahanan dirimu gampang runtuh.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-6 shadow-inner space-y-4 border border-teal-900">
+                            <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-400"><i class="fa-solid fa-scroll mr-1"></i> Hadis Shahih Riwayat Muslim</span>
+                                <span class="bg-teal-500/20 text-teal-300 text-[10px] px-2 py-0.5 rounded-full font-mono">Shahih</span>
+                            </div>
+                            <p class="text-slate-200 text-base font-medium leading-relaxed">
+                                "Mukmin yang kuat itu lebih baik dan lebih dicintai oleh Allah daripada mukmin yang lemah; dan pada keduanya ada kebaikan..."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-slate-100 pt-6 mt-8">
+                        <button id="prev-modul-btn" onclick="navigasiModul(-1)" class="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                            <i class="fa-solid fa-angle-left"></i> Modul Sebelumnya
+                        </button>
+                        <button id="next-modul-btn" onclick="navigasiModul(1)" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-sm font-semibold text-white shadow-md shadow-teal-600/10 transition flex items-center gap-2">
+                            Modul Berikutnya <i class="fa-solid fa-angle-right"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+
+        <section id="section-kuis" class="hidden max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
+            <div id="quiz-start-card" class="bg-white p-8 sm:p-12 rounded-3xl border border-slate-100 shadow-xl text-center space-y-6">
+                <div class="w-20 h-20 bg-teal-50 text-teal-600 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-md">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-bold text-slate-900">Uji Pemahaman Aqidahmu!</h2>
+                    <p class="text-slate-500 max-w-md mx-auto">Kuis terdiri dari 4 pertanyaan seru seputar materi Aqidah Islam yang barusan kamu baca. Sudah siap?</p>
+                </div>
+                <button onclick="startQuiz()" class="w-full sm:w-auto px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl shadow-lg shadow-teal-600/20 transition transform active:scale-95">
+                    Gas, Mulai Kuis! <i class="fa-solid fa-play ml-2"></i>
+                </button>
+            </div>
+
+            <div id="quiz-play-card" class="hidden bg-white p-6 sm:p-10 rounded-3xl border border-slate-100 shadow-xl space-y-6">
+                <div class="flex justify-between items-center text-sm border-b border-slate-100 pb-4">
+                    <span class="text-slate-500 font-medium">Pertanyaan ke: <b id="quiz-current-num" class="text-teal-600 text-base">1</b> dari <span id="quiz-total-num">4</span></span>
+                    <span class="bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-xs font-bold"><i class="fa-solid fa-clock mr-1 animate-pulse"></i> Mode Santai</span>
+                </div>
+
+                <h3 id="quiz-question-text" class="text-xl font-bold text-slate-900 leading-snug">
+                    Memuat pertanyaan kuis...
+                </h3>
+
+                <div id="quiz-options-container" class="space-y-3 pt-2">
+                    </div>
+
+                <div class="pt-4 border-t border-slate-100 flex justify-end">
+                    <button id="quiz-action-btn" onclick="submitOrNextAnswer()" disabled class="w-full sm:w-auto px-6 py-3 bg-slate-300 text-slate-500 rounded-xl font-bold cursor-not-allowed transition">
+                        Pilih Opsi Terlebih Dahulu
+                    </button>
+                </div>
+            </div>
+
+            <div id="quiz-result-card" class="hidden bg-white p-8 sm:p-12 rounded-3xl border border-slate-100 shadow-xl text-center space-y-6">
+                <div id="result-icon-box" class="w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto animate-bounce">
+                    </div>
+                <div class="space-y-2">
+                    <h3 id="result-status-title" class="text-3xl font-extrabold text-slate-900">Luar Biasa!</h3>
+                    <p id="result-feedback-text" class="text-slate-500 max-w-sm mx-auto">Kamu benar-benar menyimak materi dengan baik.</p>
+                </div>
+                
+                <div class="bg-slate-50 inline-block p-6 rounded-3xl border border-slate-200/60">
+                    <div class="text-5xl font-black text-teal-600" id="result-score-display">100</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Skor Kamu</div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                    <button onclick="startQuiz()" class="px-6 py-3 border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition active:scale-95">
+                        <i class="fa-solid fa-rotate mr-2"></i> Ulangi Kuis
+                    </button>
+                    <button onclick="showSection('modul')" class="px-6 py-3 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition shadow-md active:scale-95">
+                        <i class="fa-solid fa-book mr-2"></i> Baca Materi Lagi
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 pt-12 pb-6 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-slate-800 pb-8">
+                <div class="flex items-center gap-2">
+                    <div class="bg-teal-500 text-slate-950 p-2 rounded-xl">
+                        <i class="fa-solid fa-kaaba text-sm"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white tracking-tight">Aqidah<span class="text-teal-400">Verse</span></span>
+                </div>
+                <div class="flex gap-6 text-sm font-medium">
+                    <button onclick="showSection('home')" class="hover:text-teal-400 transition">Beranda</button>
+                    <button onclick="showSection('modul')" class="hover:text-teal-400 transition">Modul</button>
+                    <button onclick="showSection('kuis')" class="hover:text-teal-400 transition">Kuis</button>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-between items-center text-xs gap-4 text-center sm:text-left">
+                <p>&copy; 2026 AqidahVerse. Hak Cipta Dilindungi.</p>
+                <div class="bg-slate-800 border border-slate-700/60 px-4 py-2 rounded-xl text-slate-300">
+                    <span class="font-bold text-teal-400"><i class="fa-solid fa-code mr-1.5"></i> Developed by:</span> Avito Deanova (NIM: K2525072)
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. DATA FUN FACT / DAILY REFRESHER
+        const factsData = [
+            "Kata 'Aqidah' diambil dari kata 'Al-Iqdu' yang berarti ikatan kokoh. Jadi aqidah adalah ikatan hati yang gak bisa lepas dari iman!",
+            "Tauhid dibagi 3 cabang: Rububiyah (Esa perbuatan-Nya), Uluhiyah (Esa disembah), dan Asma was Sifat (Esa Nama & Sifat-Nya).",
+            "Malaikat diciptakan dari Nur (Cahaya), Jin dari Api (Marijminannar), dan Manusia (Nabi Adam) dari Tanah.",
+            "Percaya takdir baik & buruk (Qadha dan Qadar) adalah bagian penutup rukun iman ke-6 yang bikin mental kita sekuat baja!",
+            "Nabi Muhammad SAW menyebut keimanan punya lebih dari 70 cabang. Yang paling tinggi ucapan Laa ilaha illallah, yang paling rendah menyingkirkan duri di jalanan."
+        ];
+
+        function changeFact() {
+            const randomIdx = Math.floor(Math.random() * factsData.length);
+            document.getElementById('daily-fact-box').innerText = `"${factsData[randomIdx]}"`;
+        }
+        // Set otomatis saat load awal
+        document.getElementById('hero-fact').innerText = factsData[1];
+
+
+        // 2. LOGIKA SINGLE PAGE APPLICATION (SPA) NAVIGATION
+        function showSection(sectionId) {
+            // Sembunyikan semua section utama
+            document.getElementById('section-home').classList.add('hidden');
+            document.getElementById('section-modul').classList.add('hidden');
+            document.getElementById('section-kuis').classList.add('hidden');
+            
+            // Munculkan section yang dituju
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+            
+            // Tutup mobile menu otomatis jika terbuka
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Scroll ke posisi paling atas halaman
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        currentQuizQuestion++;
-        renderKuis();
-    }
-</script>
+        // Toggle Responsive Hamburger Menu
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+
+        // 3. LOGIKA INTEGRASI MODUL BELAJAR & PROGRESS BAR SIMULASI
+        let activeModulId = 1;
+        const totalModul = 3;
+
+        function selectModul(id) {
+            activeModulId = id;
+            
+            // Sembunyikan semua artikel konten materi
+            for(let i=1; i<=totalModul; i++){
+                document.getElementById(`materi-${i}`).classList.add('hidden');
+                // Atur ulang styling button kiri ke non-aktif
+                const btn = document.getElementById(`btn-m${i}`);
+                btn.className = "w-full text-left p-5 rounded-2xl border transition duration-200 font-bold flex items-center gap-4 bg-white border-slate-200 text-slate-700 hover:bg-slate-100";
+                btn.querySelector('span').className = "w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center";
+            }
+
+            // Tampilkan materi terpilih
+            document.getElementById(`materi-${id}`).classList.remove('hidden');
+            
+            // Ubah style button kiri terpilih jadi aktif (Hijau/Teal)
+            const activeBtn = document.getElementById(`btn-m${id}`);
+            activeBtn.className = "w-full text-left p-5 rounded-2xl border transition duration-200 font-bold flex items-center gap-4 bg-teal-600 border-teal-600 text-white shadow-lg shadow-teal-600/10";
+            activeBtn.querySelector('span').className = "w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center";
+
+            // Update Status Tombol Prev & Next Bawah
+            const prevBtn = document.getElementById('prev-modul-btn');
+            const nextBtn = document.getElementById('next-modul-btn');
+
+            if(id === 1) {
+                prevBtn.disabled = true;
+                prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                prevBtn.disabled = false;
+                prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            if(id === totalModul) {
+                nextBtn.innerHTML = `Selesai Belajar <i class="fa-solid fa-circle-check"></i>`;
+            } else {
+                nextBtn.innerHTML = `Modul Berikutnya <i class="fa-solid fa-angle-right"></i>`;
+            }
+
+            // Hitung Simulasi Progress Bar
+            const hitungPersen = Math.round((id / totalModul) * 100);
+            document.getElementById('progress-text').innerText = `${hitungPersen}% Selesai`;
+            document.getElementById('progress-bar').style.width = `${hitungPersen}%`;
+        }
+
+        function navigasiModul(arah) {
+            let targetId = activeModulId + arah;
+            if(targetId >= 1 && targetId <= totalModul) {
+                selectModul(targetId);
+            } else if (targetId > totalModul) {
+                // Jika klik berikutnya di materi terakhir, lempar langsung ke kuis!
+                showSection('kuis');
+            }
+        }
+
+
+        // 4. LOGIKA KUIS INTERAKTIF BERBASIS SINKRONISASI MODUL MATERI
+        const listPertanyaan = [
+            {
+                tanya: "Apa arti harfiah dari istilah 'Aqidah' menurut bahasa asal katanya?",
+                opsi: ["Jalan pintas kehidupan", "Ikatan kokoh di dalam hati", "Buku catatan harian", "Ucapan lisan semata"],
+                kunci: 1 // Indeks opsi ke-1
+            },
+            {
+                tanya: "Cabang Tauhid yang mengatur pengesaan segala perbuatan Allah seperti merajai alam semesta dinamakan...",
+                opsi: ["Tauhid Uluhiyah", "Tauhid Asma was Sifat", "Tauhid Rububiyah", "Tauhid Mulkiyah"],
+                kunci: 2
+            },
+            {
+                tanya: "Berdasarkan QS. Qaf ayat 18, dua malaikat yang selalu stand by menjaga dan mencatat ucapan/ketikan kita adalah...",
+                opsi: ["Jibril & Mikail", "Raqib & Atid", "Malik & Ridwan", "Munkar & Nakir"],
+                kunci: 1
+            },
+            {
+                tanya: "Bagaimana cara mengekspresikan Aqidah yang kuat dalam status kamu sebagai seorang pelajar/remaja?",
+                opsi: ["Gampang cemas ikut ramalan zodiak", "Takut berlebihan sama hantu", "Shalat tepat waktu & selektif menyaring sirkel pertemanan", "Ikut-ikutan trend negatif biar dianggap gaul"],
+                kunci: 2
+            }
+        ];
+
+        let indexSoalAktif = 0;
+        let tampungSkorBenar = 0;
+        let indexJawabanDipilih = null;
+
+        function startQuiz() {
+            indexSoalAktif = 0;
+            tampungSkorBenar = 0;
+            indexJawabanDipilih = null;
+
+            document.getElementById('quiz-start-card').classList.add('hidden');
+            document.getElementById('quiz-result-card').classList.add('hidden');
+            document.getElementById('quiz-play-card').classList.remove('hidden');
+            
+            document.getElementById('quiz-total-num').innerText = listPertanyaan.length;
+            renderSoal();
+        }
+
+        function renderSoal() {
+            indexJawabanDipilih = null;
+            const dataSoal = listPertanyaan[indexSoalAktif];
+            
+            // Update Nomor Atas
+            document.getElementById('quiz-current-num').innerText = indexSoalAktif + 1;
+            // Update Teks Pertanyaan
+            document.getElementById('quiz-question-text').innerText = dataSoal.tanya;
+
+            // Render Pilihan Jawaban
+            const containerOpsi = document.getElementById('quiz-options-container');
+            containerOpsi.innerHTML = '';
+
+            dataSoal.opsi.forEach((opsiText, idx) => {
+                const btnOpsi = document.createElement('button');
+                btnOpsi.className = "w-full text-left p-4 sm:p-5 rounded-2xl border border-slate-200 font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 transition flex items-center gap-4 text-sm sm:text-base";
+                btnOpsi.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-white border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0">${String.fromCharCode(65 + idx)}</span>
+                    <span>${opsiText}</span>
+                `;
+                btnOpsi.onclick = () => pilihOpsiJawaban(idx, btnOpsi);
+                containerOpsi.appendChild(btnOpsi);
+            });
+
+            // Reset action button bawah
+            const actionBtn = document.getElementById('quiz-action-btn');
+            actionBtn.disabled = true;
+            actionBtn.className = "w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-400 rounded-xl font-bold cursor-not-allowed transition";
+            actionBtn.innerText = "Pilih Opsi Terlebih Dahulu";
+        }
+
+        function pilihOpsiJawaban(idxChosen, htmlButton) {
+            indexJawabanDipilih = idxChosen;
+            
+            // Kembalikan semua button opsi ke style default
+            const allOptionButtons = document.getElementById('quiz-options-container').querySelectorAll('button');
+            allOptionButtons.forEach((btn, index) => {
+                btn.className = "w-full text-left p-4 sm:p-5 rounded-2xl border border-slate-200 font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 transition flex items-center gap-4 text-sm sm:text-base";
+                btn.querySelector('span').className = "w-8 h-8 rounded-full bg-white border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0";
+            });
+
+            // Ubah button terpilih jadi bergaya aktif modern teal
+            htmlButton.className = "w-full text-left p-4 sm:p-5 rounded-2xl border-2 border-teal-500 font-semibold text-teal-900 bg-teal-50/70 transition flex items-center gap-4 text-sm sm:text-base";
+            htmlButton.querySelector('span').className = "w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold shrink-0";
+
+            // Aktifkan tombol konfirmasi di bawah
+            const actionBtn = document.getElementById('quiz-action-btn');
+            actionBtn.disabled = false;
+            actionBtn.className = "w-full sm:w-auto px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold transition shadow-md cursor-pointer";
+            
+            if(indexSoalAktif === listPertanyaan.length - 1) {
+                actionBtn.innerText = "Lihat Hasil Skor";
+            } else {
+                actionBtn.innerText = "Kunci Jawaban & Lanjut";
+            }
+        }
+
+        function submitOrNextAnswer() {
+            if(indexJawabanDipilih === null) return;
+
+            // Evaluasi jawaban benar/salah
+            const kunciBenar = listPertanyaan[indexSoalAktif].kunci;
+            if(indexJawabanDipilih === kunciBenar) {
+                tampungSkorBenar++;
+            }
+
+            // Cek apakah masih ada soal berikutnya
+            if(indexSoalAktif < listPertanyaan.length - 1) {
+                indexSoalAktif++;
+                renderSoal();
+            } else {
+                // Tampilkan hasil akhir kuis
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-play-card').classList.add('hidden');
+            document.getElementById('quiz-result-card').classList.remove('hidden');
+
+            // Kalkulasi skor matematika sederhana
+            const skorAkhir = Math.round((tampungSkorBenar / listPertanyaan.length) * 100);
+            document.getElementById('result-score-display').innerText = skorAkhir;
+
+            const iconBox = document.getElementById('result-icon-box');
+            const titleStatus = document.getElementById('result-status-title');
+            const feedbackText = document.getElementById('result-feedback-text');
+
+            // Konfigurasi feedback UI/UX dinamis berdasarkan skor
+            if(skorAkhir >= 80) {
+                iconBox.className = "w-24 h-24 rounded-3xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-5xl mx-auto shadow-md";
+                iconBox.innerHTML = `<i class="fa-solid fa-crown"></i>`;
+                titleStatus.innerText = "Keren Banget! 🔥";
+                titleStatus.className = "text-3xl font-extrabold text-emerald-600";
+                feedbackText.innerText = "Pemahaman aqidahmu mantap banget. Pertahankan kesalehan intelektualmu, ya!";
+            } else if (skorAkhir >= 50) {
+                iconBox.className = "w-24 h-24 rounded-3xl bg-amber-50 text-amber-500 flex items-center justify-center text-5xl mx-auto shadow-md";
+                iconBox.innerHTML = `<i class="fa-solid fa-thumbs-up"></i>`;
+                titleStatus.innerText = "Cukup Bagus! 👍";
+                titleStatus.className = "text-3xl font-extrabold text-amber-600";
+                feedbackText.innerText = "Sedikit lagi kamu bisa raih nilai sempurna. Yuk, baca ulang materinya sekali lagi!";
+            } else {
+                iconBox.className = "w-24 h-24 rounded-3xl bg-rose-50 text-rose-500 flex items-center justify-center text-5xl mx-auto shadow-md";
+                iconBox.innerHTML = `<i class="fa-solid fa-book-open-reader"></i>`;
+                titleStatus.innerText = "Yuk Belajar Lagi! 📚";
+                titleStatus.className = "text-3xl font-extrabold text-rose-600";
+                feedbackText.innerText = "Jangan patah semangat! Memahami dasar iman butuh proses. Yuk, baca ulang pelan-pelan.";
+            }
+        }
+    </script>
+</body>
+</html>
