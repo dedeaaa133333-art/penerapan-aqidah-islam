@@ -1,1590 +1,1110 @@
-<!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aqidah Islam - Avito Deanova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        heading: ['Bricolage Grotesque', 'sans-serif'],
-                        arabic: ['Amiri', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .animate-bounce-slow { animation: bounce 3s infinite; }
-        
-        /* Animations */
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+import { AppProvider, useApp } from "./store/AppContext";
+import Header from "./components/Header";
+import Beranda from "./pages/Beranda";
+import Materi from "./pages/Materi";
+import MateriDetail from "./pages/MateriDetail";
+import Tracker from "./pages/Tracker";
+import Kuis from "./pages/Kuis";
+import KuisPlay from "./pages/KuisPlay";
+import KuisResult from "./pages/KuisResult";
+import Kisah from "./pages/Kisah";
+import Progress from "./pages/Progress";
+import FlashcardPage from "./pages/Flashcard";
+import Tantangan from "./pages/Tantangan";
 
-        @keyframes fadeOutDown {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-        }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes shimmer {
-            0% {
-                background-position: -1000px 0;
-            }
-            100% {
-                background-position: 1000px 0;
-            }
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-            }
-        }
-        
-        .animate-slideInUp {
-            animation: slideInUp 0.5s ease-out forwards;
-        }
-        
-        .animate-slideInDown {
-            animation: slideInDown 0.5s ease-out forwards;
-        }
-        
-        .animate-fadeIn {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
+function AppInner() {
+  const { state } = useApp();
+  const { view, darkMode } = state;
 
-        .animate-fadeOutDown {
-            animation: fadeOutDown 0.25s ease-in forwards;
-        }
-        
-        .animate-scaleIn {
-            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        
-        .animate-pulse-glow {
-            animation: pulse-glow 2s infinite;
-        }
-        
-        /* Grid animation - stagger children */
-        .materi-grid-item {
-            opacity: 0;
-            animation: slideInUp 0.6s ease-out forwards;
-        }
-        
-        .materi-grid-item:nth-child(1) { animation-delay: 0s; }
-        .materi-grid-item:nth-child(2) { animation-delay: 0.1s; }
-        .materi-grid-item:nth-child(3) { animation-delay: 0.2s; }
-        .materi-grid-item:nth-child(4) { animation-delay: 0.3s; }
-        .materi-grid-item:nth-child(5) { animation-delay: 0.4s; }
-        .materi-grid-item:nth-child(6) { animation-delay: 0.5s; }
-        .materi-grid-item:nth-child(7) { animation-delay: 0.6s; }
-        .materi-grid-item:nth-child(8) { animation-delay: 0.7s; }
-        .materi-grid-item:nth-child(9) { animation-delay: 0.8s; }
-        .materi-grid-item:nth-child(10) { animation-delay: 0.9s; }
-        
-        /* View transitions */
-        .app-view {
-            animation: fadeIn 0.35s ease-out forwards;
-        }
-        
-        .app-view.hidden {
-            display: none;
-        }
+  const renderPage = () => {
+    switch (view) {
+      case "beranda": return <Beranda />;
+      case "materi": return <Materi />;
+      case "materi-detail": return <MateriDetail />;
+      case "tracker": return <Tracker />;
+      case "kuis": return <Kuis />;
+      case "kuis-play": return <KuisPlay />;
+      case "kuis-result": return <KuisResult />;
+      case "kisah": return <Kisah />;
+      case "progress": return <Progress />;
+      case "flashcard": return <FlashcardPage />;
+      case "tantangan": return <Tantangan />;
+      default: return <Beranda />;
+    }
+  };
 
-        /* Exit animation state, applied right before switching views */
-        .app-view.view-exiting {
-            animation: fadeOutDown 0.25s ease-in forwards;
-            pointer-events: none;
-        }
-        
-        /* Detail content animation */
-        .detail-content {
-            animation: slideInUp 0.6s ease-out;
-        }
-        
-        /* Button ripple effect */
-        .btn-ripple {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-ripple::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        
-        .btn-ripple:active::after {
-            animation: ripple 0.6s ease-out;
-        }
-        
-        @keyframes ripple {
-            to {
-                width: 300px;
-                height: 300px;
-                opacity: 0;
-            }
-        }
-
-        /* Chat AI styles */
-        @keyframes typingBounce {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-            30% { transform: translateY(-6px); opacity: 1; }
-        }
-        .typing-dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #14b8a6;
-            animation: typingBounce 1.2s infinite;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.15s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.3s; }
-
-        .chat-bubble-user {
-            background: linear-gradient(135deg, #0f766e, #059669);
-            color: white;
-            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
-        }
-        .chat-bubble-ai {
-            background: #ffffff;
-            color: #1e293b;
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
-        }
-        .chat-bubble-ai p { margin-bottom: 0.5rem; }
-        .chat-bubble-ai p:last-child { margin-bottom: 0; }
-        .chat-bubble-ai strong { font-weight: 800; color: #0f172a; }
-        .chat-bubble-ai ul, .chat-bubble-ai ol { margin: 0.25rem 0 0.5rem 1.1rem; }
-        .chat-bubble-ai li { margin-bottom: 0.2rem; }
-
-        #chat-messages-box::-webkit-scrollbar { width: 6px; }
-        #chat-messages-box::-webkit-scrollbar-track { background: transparent; }
-        #chat-messages-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-slate-50 via-teal-50/20 to-indigo-50/30 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
-
-    <header class="bg-white/90 backdrop-blur-md border-b-2 border-teal-500/20 sticky top-0 z-50 px-4 lg:px-8 py-4 shadow-md flex justify-between items-center">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('beranda')">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 via-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-teal-500/20 transform hover:rotate-12 transition">
-                <i class="fa-solid fa-book-quran text-xl"></i>
+  return (
+    <div className={`min-h-screen ${darkMode ? "bg-slate-950" : "bg-slate-50"}`}>
+      <Header />
+      <main className="max-w-6xl mx-auto px-4 lg:px-8 py-8">
+        {renderPage()}
+      </main>
+      <footer className="mt-12 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 py-8">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-emerald-500 to-teal-600 flex items-center justify-center shadow">
+                <span className="text-white text-sm">☪</span>
+              </div>
+              <div>
+                <p className="font-extrabold text-slate-900 dark:text-white text-sm">Aqidah Islam Interaktif</p>
+                <p className="text-xs text-slate-400">Generasi Berkarakter Rabbani</p>
+              </div>
             </div>
-            <div>
-                <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 to-teal-600 font-heading tracking-tight leading-tight">Aqidah Islam</h1>
-                <p class="text-[11px] text-amber-600 font-bold tracking-wider uppercase">Generasi Berkarakter Rabbani</p>
+            <div className="text-center sm:text-right">
+              <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Disusun oleh: <span className="text-teal-600 dark:text-teal-400">Avito Deanova</span>
+              </p>
+              <p className="text-xs text-slate-400 font-mono">NIM: K2525072</p>
             </div>
+          </div>
+          <p className="text-center text-[10px] text-slate-300 dark:text-slate-600 mt-6 font-medium">
+            بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ — Dibuat dengan cinta untuk generasi Muslim yang tangguh
+          </p>
         </div>
+      </footer>
+    </div>
+  );
+}
 
-        <div class="relative">
-            <button onclick="toggleGlobalMenu()" class="w-11 h-11 rounded-xl bg-gradient-to-r from-slate-100 to-slate-50 hover:from-teal-500 hover:to-emerald-500 hover:text-white border border-slate-200 shadow-sm transition flex items-center justify-center focus:outline-none group">
-                <i class="fa-solid fa-ellipsis-vertical text-lg group-hover:scale-110 transition"></i>
+export default function App() {
+  return (
+    <AppProvider>
+      <AppInner />
+    </AppProvider>
+  );
+}
+import { useState, useEffect } from "react";
+import { useApp, View } from "../store/AppContext";
+
+function getHijriDate(): string {
+  const now = new Date();
+  const jd = Math.floor(now.getTime() / 86400000 + 2440587.5);
+  const l = jd - 1948440 + 10632;
+  const n = Math.floor((l - 1) / 10631);
+  const l2 = l - 10631 * n + 354;
+  const j =
+    Math.floor((10985 - l2) / 5316) * Math.floor((50 * l2) / 17719) +
+    Math.floor(l2 / 5670) * Math.floor((43 * l2) / 15238);
+  const l3 =
+    l2 -
+    Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) -
+    Math.floor(j / 16) * Math.floor((15238 * j) / 43) +
+    29;
+  const month = Math.floor((24 * l3) / 709);
+  const day = l3 - Math.floor((709 * month) / 24);
+  const year = 30 * n + j - 30;
+  const names = [
+    "Muharram","Safar","Rabi'ul Awwal","Rabi'ul Akhir",
+    "Jumadal Ula","Jumadal Akhira","Rajab","Sya'ban",
+    "Ramadhan","Syawal","Dzulqa'idah","Dzulhijjah",
+  ];
+  return `${day} ${names[month - 1]} ${year} H`;
+}
+
+const navItems: { label: string; view: View; icon: string }[] = [
+  { label: "Beranda", view: "beranda", icon: "🏠" },
+  { label: "Materi", view: "materi", icon: "📖" },
+  { label: "Tracker", view: "tracker", icon: "📅" },
+  { label: "Kuis", view: "kuis", icon: "🎓" },
+  { label: "Tantangan", view: "tantangan", icon: "⚡" },
+  { label: "Kisah", view: "kisah", icon: "⭐" },
+  { label: "Progress", view: "progress", icon: "📊" },
+  { label: "Flashcard", view: "flashcard", icon: "🃏" },
+];
+
+export default function Header() {
+  const { state, dispatch } = useApp();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [hijri, setHijri] = useState("");
+
+  useEffect(() => {
+    setHijri(getHijriDate());
+  }, []);
+
+  const navigate = (view: View) => {
+    dispatch({ type: "NAV", view });
+    setMenuOpen(false);
+  };
+
+  return (
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-emerald-100 dark:border-slate-700 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 lg:px-8 py-3 flex justify-between items-center gap-3">
+        {/* Logo */}
+        <button
+          onClick={() => navigate("beranda")}
+          className="flex items-center gap-3 group flex-shrink-0"
+        >
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <span className="text-white text-lg">☪</span>
+          </div>
+          <div className="text-left hidden sm:block">
+            <h1 className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 to-teal-600 dark:from-emerald-400 dark:to-teal-400 leading-tight">
+              Aqidah Islam
+            </h1>
+            <p className="text-[10px] text-amber-600 dark:text-amber-400 font-bold tracking-wider uppercase leading-none">
+              Generasi Berkarakter Rabbani
+            </p>
+          </div>
+        </button>
+
+        {/* Hijri date badge — desktop only */}
+        {hijri && (
+          <div className="hidden xl:flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-700 rounded-full px-3 py-1 flex-shrink-0">
+            <span className="text-xs">🌙</span>
+            <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
+              {hijri}
+            </span>
+          </div>
+        )}
+
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+          {navItems.map((item) => (
+            <button
+              key={item.view}
+              onClick={() => navigate(item.view)}
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                state.view === item.view
+                  ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300"
+                  : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-800"
+              }`}
+            >
+              <span className="mr-1">{item.icon}</span>
+              {item.label}
             </button>
-            <div id="global-dropdown" class="hidden absolute right-0 mt-3 w-60 bg-white/95 backdrop-blur-md border border-teal-500/20 rounded-2xl shadow-2xl z-50 overflow-hidden transform origin-top-right transition-all">
-                <div class="p-2 font-bold text-xs text-slate-400 uppercase tracking-widest bg-slate-50 border-b border-slate-100 px-4 py-2">Navigasi Utama</div>
-                <div class="p-1.5 font-semibold text-sm text-slate-700 space-y-0.5">
-                    <button onclick="navigateTo('beranda')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-house text-emerald-500 w-5 text-base"></i> Beranda</button>
-                    <button onclick="navigateTo('materi')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-book-open text-teal-500 w-5 text-base"></i> Baca Materi</button>
-                    <button onclick="navigateTo('tracker')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-calendar-check text-amber-500 w-5 text-base"></i> Tracker Harian</button>
-                    <button onclick="navigateTo('kuis')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-graduation-cap text-indigo-500 w-5 text-base"></i> Menu Kuis</button>
-                    <button onclick="navigateTo('kisah')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-star text-rose-500 w-5 text-base"></i> Kisah Inspiratif</button>
-                    <button onclick="navigateTo('chat')" class="w-full text-left px-4 py-3 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50/50 rounded-xl flex items-center gap-3 transition text-slate-800"><i class="fa-solid fa-robot text-teal-500 w-5 text-base"></i> Tanya AI</button>
-                </div>
-            </div>
+          ))}
+        </nav>
+
+        {/* Right controls */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => dispatch({ type: "TOGGLE_DARK" })}
+            title={state.darkMode ? "Mode Terang" : "Mode Gelap"}
+            className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 flex items-center justify-center transition-colors text-sm"
+          >
+            {state.darkMode ? "☀️" : "🌙"}
+          </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="lg:hidden w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 flex items-center justify-center transition-colors"
+          >
+            <span className="text-base dark:text-white">{menuOpen ? "✕" : "☰"}</span>
+          </button>
         </div>
+      </div>
+
+      {/* Hijri date — mobile strip */}
+      {hijri && (
+        <div className="xl:hidden border-t border-emerald-50 dark:border-slate-800 bg-emerald-50/60 dark:bg-emerald-900/20 px-4 py-1 flex items-center justify-center gap-1.5">
+          <span className="text-xs">🌙</span>
+          <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+            {hijri}
+          </span>
+        </div>
+      )}
+
+      {/* Mobile dropdown */}
+      {menuOpen && (
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-emerald-100 dark:border-slate-700 shadow-xl z-50">
+          <div className="p-3 grid grid-cols-2 gap-1">
+            {navItems.map((item) => (
+              <button
+                key={item.view}
+                onClick={() => navigate(item.view)}
+                className={`text-left px-4 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold transition-colors ${
+                  state.view === item.view
+                    ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-800 hover:text-emerald-700 dark:hover:text-emerald-400"
+                }`}
+              >
+                <span>{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
+  );
+}
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useApp } from "../store/AppContext";
+import { quizDatabase, Question } from "../data/quizzes";
 
-    <main class="flex-grow max-w-6xl w-full mx-auto px-4 lg:px-8 py-8">
-        
-        <section id="view-beranda" class="app-view block space-y-8">
-            <div class="bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-900 rounded-3xl p-8 lg:p-12 text-white shadow-2xl relative overflow-hidden border-b-4 border-emerald-500 shadow-emerald-950/20">
-                <div class="absolute -right-16 -bottom-16 opacity-10 text-[240px] pointer-events-none text-teal-400 animate-pulse"><i class="fa-solid fa-mosque"></i></div>
-                <div class="max-w-2xl space-y-5 relative z-10">
-                    <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase border border-amber-400/30 inline-block shadow-md">✨ PENYALUR IMAN MUDA</span>
-                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight font-heading">Kokohkan Tiang Aqidah di Era Digital</h2>
-                    <p class="text-slate-200 text-sm sm:text-base leading-relaxed font-medium">
-                        Tempat belajar interaktif khusus remaja untuk memurnikan tauhid, menghancurkan kecemasan hidup, serta membangun mentalitas juara berlandaskan tuntunan murni Al-Quran dan Sunnah.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-3">
-                        <button onclick="navigateTo('materi')" class="bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-xl hover:scale-105 transition-all flex items-center gap-2 border-b-2 border-orange-600">
-                            <i class="fa-solid fa-book-open"></i> Baca Materi
-                        </button>
-                        <button onclick="navigateTo('tracker')" class="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-md transition-all flex items-center gap-2 border border-white/20">
-                            <i class="fa-solid fa-calendar-check text-amber-400"></i> Tracker Harian
-                        </button>
-                        <button onclick="navigateTo('chat')" class="bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 px-6 py-3.5 rounded-xl font-extrabold text-sm shadow-xl hover:scale-105 transition-all flex items-center gap-2 border-b-2 border-emerald-700">
-                            <i class="fa-solid fa-robot"></i> Tanya AI
-                        </button>
-                    </div>
+const DURATION = 60;
+
+function buildPool(): Question[] {
+  const all: Question[] = [];
+  Object.values(quizDatabase).forEach((qs) => all.push(...qs));
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j], all[i]];
+  }
+  return all;
+}
+
+type Phase = "idle" | "playing" | "done";
+
+export default function Tantangan() {
+  const { state, dispatch } = useApp();
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [pool, setPool] = useState<Question[]>([]);
+  const [idx, setIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(DURATION);
+  const [chosen, setChosen] = useState<number | null>(null);
+  const [answered, setAnswered] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const endGame = useCallback(
+    (finalScore: number) => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      dispatch({ type: "SET_TANTANGAN_SCORE", score: finalScore });
+      setPhase("done");
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    if (phase !== "playing") return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          endGame(score);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [phase, endGame, score]);
+
+  const startGame = () => {
+    setPool(buildPool());
+    setIdx(0);
+    setScore(0);
+    setAnswered(0);
+    setTimeLeft(DURATION);
+    setChosen(null);
+    setPhase("playing");
+  };
+
+  const handleAnswer = (optIdx: number) => {
+    if (chosen !== null) return;
+    setChosen(optIdx);
+    const correct = optIdx === pool[idx].a;
+    const newScore = correct ? score + 1 : score;
+    if (correct) setScore(newScore);
+    setAnswered((a) => a + 1);
+    setTimeout(() => {
+      setChosen(null);
+      if (idx + 1 >= pool.length) {
+        endGame(newScore);
+      } else {
+        setIdx((i) => i + 1);
+      }
+    }, 700);
+  };
+
+  const timerPct = (timeLeft / DURATION) * 100;
+  const timerColor =
+    timeLeft > 30 ? "bg-emerald-500" : timeLeft > 10 ? "bg-amber-500" : "bg-red-500";
+
+  const current = pool[idx];
+  const isNewRecord = phase === "done" && score > 0 && score >= state.tantanganHighScore;
+
+  return (
+    <div className="space-y-6 max-w-2xl mx-auto">
+      {/* Header */}
+      <div>
+        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          ⚡ Mode Tantangan
+        </h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+          Jawab soal sebanyak mungkin dalam 60 detik!
+        </p>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {/* IDLE */}
+        {phase === "idle" && (
+          <motion.div
+            key="idle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-4"
+          >
+            {/* High score card */}
+            <div className="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full" />
+              <div className="absolute -right-2 -bottom-10 w-44 h-44 bg-white/5 rounded-full" />
+              <div className="relative z-10 flex items-center justify-between">
+                <div>
+                  <p className="text-violet-200 font-bold text-xs uppercase tracking-wider mb-1">
+                    Rekor Terbaikmu
+                  </p>
+                  <p className="text-6xl font-extrabold">
+                    {state.tantanganHighScore}
+                  </p>
+                  <p className="text-violet-200 text-sm font-medium mt-1">
+                    soal benar
+                  </p>
                 </div>
+                <span className="text-6xl opacity-80">🏆</span>
+              </div>
             </div>
 
-            <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-yellow-500/5 border border-amber-500/30 rounded-3xl p-6 shadow-xl relative overflow-hidden backdrop-blur-sm">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
-                <div class="flex justify-between items-center border-b border-amber-500/20 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-amber-500 text-2xl animate-bounce-slow"><i class="fa-solid fa-bolt-lightning"></i></span>
-                        <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm uppercase tracking-widest font-heading">Mood Booster Penolak Galau Hari Ini</h3>
-                    </div>
-                    <button onclick="refreshMoodBooster()" class="text-xs font-black text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-3 py-2 rounded-xl transition shadow-md flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate text-xs"></i> Acak Quote
-                    </button>
+            {/* Rules */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm space-y-3">
+              <p className="font-extrabold text-slate-900 dark:text-white">📋 Aturan Main</p>
+              {[
+                ["⏱️", "Waktu 60 detik, habis = selesai"],
+                ["🎲", "Soal acak dari semua materi (240 soal)"],
+                ["✅", "Benar = +1 poin, Salah = 0 poin"],
+                ["⚡", "Jawab secepat mungkin untuk skor tinggi!"],
+              ].map(([icon, text]) => (
+                <div key={text} className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+                  <span className="text-base">{icon}</span>
+                  <span className="font-medium">{text}</span>
                 </div>
-                <div class="mt-4 p-5 bg-white/80 rounded-2xl border border-amber-500/10 shadow-inner min-h-[90px] flex flex-col justify-center">
-                    <p id="mood-text" class="text-slate-800 italic font-semibold text-base sm:text-lg leading-relaxed font-serif text-center"></p>
-                    <span class="block text-xs font-black text-amber-600 mt-2 text-center" id="mood-source">— Penguat Jiwa Pemuda</span>
-                </div>
+              ))}
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <div onclick="navigateTo('kuis')" class="bg-white border-2 border-indigo-100 p-6 rounded-2xl shadow-lg hover:border-indigo-500 cursor-pointer transform hover:-translate-y-1 transition-all group relative overflow-hidden">
-                    <div class="absolute -right-4 -bottom-4 text-indigo-100 text-7xl group-hover:scale-120 transition"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition shadow-md"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <h4 class="font-extrabold text-slate-900 mb-1.5 font-heading text-lg">Evaluasi Kuis</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed font-medium">Uji pemahaman aqidahmu lewat kuis interaktif dengan skor sempurna.</p>
-                </div>
-                <div onclick="navigateTo('kisah')" class="bg-white border-2 border-rose-100 p-6 rounded-2xl shadow-lg hover:border-rose-500 cursor-pointer transform hover:-translate-y-1 transition-all group relative overflow-hidden">
-                    <div class="absolute -right-4 -bottom-4 text-rose-100 text-7xl group-hover:scale-120 transition"><i class="fa-solid fa-star"></i></div>
-                    <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-4 group-hover:bg-rose-600 group-hover:text-white transition shadow-md"><i class="fa-solid fa-star"></i></div>
-                    <h4 class="font-extrabold text-slate-900 mb-1.5 font-heading text-lg">Kisah Inspiratif</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed font-medium">Telusuri rekam jejak perjuangan pemuda pembela panji Islam terdahulu.</p>
-                </div>
-                <div class="bg-gradient-to-br from-teal-500 to-emerald-600 p-6 rounded-2xl shadow-lg text-white flex flex-col justify-center relative overflow-hidden border-b-4 border-emerald-700">
-                    <div class="text-[10px] font-black uppercase tracking-widest text-emerald-100 bg-emerald-700/40 px-2 py-1 rounded-md w-max mb-3">Penyusun Aplikasi</div>
-                    <p class="text-xl font-extrabold font-heading">Avito Deanova</p>
-                    <p class="text-xs text-teal-100 font-semibold font-mono mt-0.5">NIM: K2525072</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="view-materi" class="app-view hidden space-y-6">
-            <div class="border-b-2 border-teal-500/20 pb-4">
-                <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Daftar Baca Materi Utama</h2>
-                <p class="text-sm text-slate-500 font-medium">Klik dan selesaikan bacaan materi untuk membuka kunci akses pengerjaan kuis materi tersebut.</p>
-            </div>
-            <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                </div>
-        </section>
-
-        <section id="view-materi-detail" class="app-view hidden space-y-6">
-            <button onclick="navigateTo('materi')" class="inline-flex items-center gap-2 text-sm font-black text-slate-600 hover:text-emerald-600 bg-white border border-slate-200 px-5 py-2.5 rounded-xl shadow-sm transition">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Materi
+            <button
+              onClick={startGame}
+              className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-violet-500/30 transition-all active:scale-95"
+            >
+              ⚡ Mulai Tantangan!
             </button>
-            <div class="bg-white border-2 border-teal-500/10 rounded-3xl p-6 lg:p-12 shadow-xl space-y-6 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 via-emerald-500 to-indigo-500"></div>
-                <div class="space-y-2 border-b border-slate-100 pb-5">
-                    <span id="detail-materi-badge" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider shadow-sm">Modul</span>
-                    <h2 id="detail-materi-title" class="text-2xl sm:text-4xl font-extrabold text-slate-900 font-heading leading-tight pt-2">Judul</h2>
-                </div>
+          </motion.div>
+        )}
 
-                <div id="detail-materi-body" class="text-slate-700 text-sm sm:text-base leading-relaxed space-y-5 text-justify">
-                    </div>
-
-                <div id="detail-materi-action" class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 p-6 rounded-2xl">
-                    <p class="text-xs text-emerald-700 font-extrabold flex items-center gap-2"><i class="fa-solid fa-circle-check text-base"></i> Selamat! Anda tuntas membaca. Modul kuis ini kini telah terbuka penuh.</p>
-                    <button id="detail-materi-quiz-btn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-black text-sm px-6 py-3.5 rounded-xl transition shadow-lg shadow-indigo-500/20"></button>
-                </div>
-            </div>
-        </section>
-
-        <section id="view-tracker" class="app-view hidden space-y-6">
-            <div class="bg-white border-2 border-amber-500/20 rounded-3xl p-6 lg:p-10 shadow-xl space-y-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-48 h-48 bg-amber-400/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Tracker Progress Amal Sholeh</h2>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Isi 10 amalan harianmu. Sistem otomatis melakukan refresh total ke 0% setiap hari pada pukul 00.00 malam.</p>
-                    </div>
-                    <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 rounded-xl font-black text-sm text-white flex items-center gap-2 shadow-md">
-                        <span>Capaian Hari Ini:</span>
-                        <span id="tracker-percentage" class="font-mono text-lg font-black bg-black/20 px-2 py-0.5 rounded">0%</span>
-                    </div>
-                </div>
-                <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
-                    <div id="tracker-bar" class="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-emerald-500 w-0 transition-all duration-700 rounded-full shadow-inner"></div>
-                </div>
-                <div id="tracker-items-box" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    </div>
-            </div>
-        </section>
-
-        <section id="view-kuis" class="app-view hidden space-y-6">
-            <div class="border-b-2 border-indigo-500/20 pb-4">
-                <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Pusat Evaluasi Kuis Aqidah</h2>
-                <p class="text-sm text-slate-500 font-medium">Selesaikan Kuis 1 sampai 10 dengan skor sempurna 100% (Benar Semua) untuk membuka 2 Akses Kuis Akhir.</p>
-            </div>
-            <div id="quiz-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                </div>
-        </section>
-
-        <section id="view-kuis-play" class="app-view hidden max-w-2xl mx-auto space-y-6">
-            <div class="bg-white border-2 border-indigo-500/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 to-violet-500"></div>
-                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
-                    <span id="play-quiz-title" class="font-black text-slate-900 text-sm tracking-wide font-heading uppercase text-indigo-600">Kuis</span>
-                    <span id="play-quiz-counter" class="text-xs font-black text-white bg-gradient-to-r from-indigo-500 to-violet-500 px-3 py-1 rounded-full font-mono">Soal 1 / 5</span>
-                </div>
-                <div class="space-y-4">
-                    <p id="play-quiz-question-text" class="font-extrabold text-base sm:text-lg text-slate-900 leading-snug">Pertanyaan...</p>
-                    <div id="play-quiz-options" class="space-y-3 pt-2">
-                        </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="view-kuis-result" class="app-view hidden max-w-md mx-auto text-center space-y-6">
-            <div class="bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-2xl space-y-5 relative overflow-hidden">
-                <div id="quiz-result-icon" class="w-24 h-24 bg-emerald-50 text-emerald-500 text-5xl rounded-full flex items-center justify-center mx-auto shadow-inner">
-                    <i class="fa-solid fa-medal"></i>
-                </div>
-                <h3 id="quiz-result-title" class="text-2xl font-extrabold text-slate-900 font-heading">Hasil Ujian</h3>
-                <div class="p-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl shadow-inner">
-                    <span class="text-[10px] font-black text-amber-400 block uppercase tracking-widest mb-1">Skor Diperoleh</span>
-                    <span id="quiz-result-score" class="text-5xl font-mono font-black text-white">100 / 100</span>
-                </div>
-                <p id="quiz-result-message" class="text-xs text-slate-500 font-semibold leading-relaxed px-2"></p>
-                <button onclick="navigateTo('kuis')" class="w-full py-3.5 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-black text-xs rounded-xl transition shadow-md tracking-wider uppercase">Kembali ke Menu Kuis</button>
-            </div>
-        </section>
-
-        <section id="view-kisah" class="app-view hidden space-y-6">
-            <div class="border-b-2 border-rose-500/20 pb-4">
-                <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Kisah Inspiratif Pemuda Islam</h2>
-                <p class="text-sm text-slate-500 font-medium">Ambil keteladanan emas dan kobarkan gairah imanmu dari perjalanan sejarah para pemuda agung di sekitar Rasulullah SAW.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="kisah-container">
-                </div>
-        </section>
-        <section id="view-chat" class="app-view hidden max-w-3xl mx-auto space-y-6">
-            <div class="border-b-2 border-teal-500/20 pb-4">
-                <h2 class="text-3xl font-extrabold text-slate-900 font-heading flex items-center gap-3"><i class="fa-solid fa-robot text-teal-500"></i> Tanya AI</h2>
-                <p class="text-sm text-slate-500 font-medium">Tanyakan apapun seputar aqidah, agama, sekolah, atau hal lainnya. AI akan menjawab sebaik mungkin.</p>
+        {/* PLAYING */}
+        {phase === "playing" && current && (
+          <motion.div
+            key="playing"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="space-y-4"
+          >
+            {/* Timer + stats bar */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700 shadow-sm space-y-3">
+              <div className="flex items-center justify-between text-sm font-bold">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Soal #{answered + 1}
+                </span>
+                <span
+                  className={`text-2xl font-extrabold tabular-nums ${
+                    timeLeft <= 10 ? "text-red-500 animate-pulse" : "text-slate-900 dark:text-white"
+                  }`}
+                >
+                  ⏱ {timeLeft}s
+                </span>
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  ✅ {score} benar
+                </span>
+              </div>
+              <div className="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <motion.div
+                  className={`h-full rounded-full transition-colors duration-300 ${timerColor}`}
+                  style={{ width: `${timerPct}%` }}
+                />
+              </div>
             </div>
 
-            <div class="bg-white border-2 border-teal-500/10 rounded-3xl shadow-xl overflow-hidden flex flex-col h-[65vh]">
-                <div id="chat-messages-box" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-4 bg-gradient-to-b from-slate-50/50 to-white custom-scrollbar"></div>
-
-                <div class="border-t border-slate-100 p-3 sm:p-4 bg-white">
-                    <div id="chat-error-box" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2 mb-2"></div>
-                    <form id="chat-form" onsubmit="return handleChatSubmit(event)" class="flex items-end gap-2">
-                        <textarea id="chat-input" rows="1" placeholder="Tulis pertanyaanmu di sini..." class="flex-grow resize-none max-h-32 px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 focus:outline-none text-sm font-medium text-slate-800 bg-slate-50"></textarea>
-                        <button type="submit" id="chat-send-btn" class="w-12 h-12 flex-shrink-0 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white shadow-md transition flex items-center justify-center btn-ripple">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </form>
-                    <p class="text-[10px] text-slate-400 mt-2 text-center font-medium">AI dapat membuat kesalahan. Periksa kembali informasi penting, terutama hal-hal yang berkaitan dengan hukum agama.</p>
+            {/* Question */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-3"
+              >
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <p className="font-extrabold text-slate-900 dark:text-white text-base leading-snug">
+                    {current.q}
+                  </p>
                 </div>
-            </div>
-        </section>
-    </main>
 
-    <footer class="bg-white border-t-2 border-slate-200 text-slate-400 text-xs py-8 mt-12 shadow-inner">
-        <div class="max-w-6xl mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            <div class="text-center md:text-left space-y-2">
-                <p class="font-extrabold text-slate-900 text-base font-heading tracking-wide">Ecosystem Aplikasi Aqidah Islam</p>
-                <p class="font-medium text-slate-500 text-xs leading-relaxed">Media Edukasi & Evaluasi Terstruktur Nilai Kemurnian Tauhid dan Peningkatan Kapasitas Batin Remaja Masa Kini.</p>
+                <div className="grid grid-cols-1 gap-2">
+                  {current.o.map((opt, i) => {
+                    let cls =
+                      "w-full text-left px-4 py-3.5 rounded-xl border-2 font-semibold text-sm transition-all ";
+                    if (chosen === null) {
+                      cls +=
+                        "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 text-slate-800 dark:text-slate-100 cursor-pointer active:scale-[0.98]";
+                    } else if (i === current.a) {
+                      cls +=
+                        "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 text-emerald-800 dark:text-emerald-200";
+                    } else if (i === chosen) {
+                      cls +=
+                        "bg-red-50 dark:bg-red-900/30 border-red-400 text-red-800 dark:text-red-200";
+                    } else {
+                      cls +=
+                        "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-500 opacity-60";
+                    }
+                    return (
+                      <button key={i} onClick={() => handleAnswer(i)} className={cls}>
+                        <span className="font-black mr-2 text-violet-500">
+                          {String.fromCharCode(65 + i)}.
+                        </span>
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* DONE */}
+        {phase === "done" && (
+          <motion.div
+            key="done"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-4"
+          >
+            {/* Result card */}
+            <div
+              className={`rounded-2xl p-8 text-white text-center shadow-xl relative overflow-hidden ${
+                isNewRecord
+                  ? "bg-gradient-to-br from-amber-500 to-orange-500"
+                  : "bg-gradient-to-br from-violet-600 to-purple-700"
+              }`}
+            >
+              <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full" />
+              <div className="relative z-10">
+                <p className="text-5xl mb-3">{isNewRecord ? "🏆" : "⚡"}</p>
+                {isNewRecord && (
+                  <p className="text-sm font-extrabold uppercase tracking-widest mb-2 bg-white/20 rounded-full px-4 py-1 inline-block">
+                    🎉 Rekor Baru!
+                  </p>
+                )}
+                <p className="text-6xl font-extrabold">{score}</p>
+                <p className="text-lg font-bold opacity-90 mt-1">soal benar</p>
+                <p className="text-sm opacity-75 mt-2">
+                  dari {answered} soal yang dijawab
+                </p>
+              </div>
             </div>
-            <div class="bg-gradient-to-br from-slate-50 to-teal-50/30 p-5 rounded-2xl border-2 border-teal-500/10 font-semibold text-slate-700 text-xs grid grid-cols-2 gap-4 shadow-sm">
-                <div><span class="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Nama Lengkap</span> <span class="font-extrabold text-slate-900 text-sm">Avito Deanova</span></div>
-                <div><span class="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Nomor Induk Mahasiswa</span> <span class="font-mono font-black text-slate-900 text-sm text-teal-600">K2525072</span></div>
-                <div><span class="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Surat Elektronik</span> <a href="mailto:avitodeanova@gmail.com" class="text-emerald-600 font-bold hover:underline block truncate">avitodeanova@gmail.com</a></div>
-                <div><span class="text-slate-400 block text-[10px] uppercase font-black tracking-widest">Kontak WhatsApp</span> <span class="font-mono font-black text-slate-900 block">082135340794</span></div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Benar", value: score, icon: "✅", color: "text-emerald-600 dark:text-emerald-400" },
+                { label: "Salah", value: answered - score, icon: "❌", color: "text-red-500" },
+                { label: "Rekor", value: state.tantanganHighScore, icon: "🏆", color: "text-amber-500" },
+              ].map((s) => (
+                <div
+                  key={s.label}
+                  className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center border border-slate-100 dark:border-slate-700 shadow-sm"
+                >
+                  <p className="text-2xl mb-1">{s.icon}</p>
+                  <p className={`text-2xl font-extrabold ${s.color}`}>{s.value}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{s.label}</p>
+                </div>
+              ))}
             </div>
+
+            {/* Accuracy */}
+            {answered > 0 && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-bold text-slate-600 dark:text-slate-300">Akurasi</span>
+                  <span className="text-sm font-extrabold text-violet-600 dark:text-violet-400">
+                    {Math.round((score / answered) * 100)}%
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-violet-500 rounded-full transition-all duration-700"
+                    style={{ width: `${(score / answered) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={startGame}
+                className="py-4 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-extrabold rounded-2xl shadow-lg transition-all active:scale-95"
+              >
+                ⚡ Main Lagi
+              </button>
+              <button
+                onClick={() => setPhase("idle")}
+                className="py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-extrabold rounded-2xl hover:border-violet-300 transition-all active:scale-95"
+              >
+                🏠 Kembali
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useApp } from "../store/AppContext";
+import { trackerItems } from "../data/tracker";
+
+const TARGET_OPTIONS = [3, 5, 7, 10];
+
+function requestNotifAndEnable(onGranted: () => void) {
+  if (!("Notification" in window)) {
+    alert("Browser kamu tidak mendukung notifikasi.");
+    return;
+  }
+  if (Notification.permission === "granted") {
+    onGranted();
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((perm) => {
+      if (perm === "granted") onGranted();
+    });
+  } else {
+    alert("Izin notifikasi ditolak. Aktifkan manual di pengaturan browser.");
+  }
+}
+
+function sendNotif(title: string, body: string) {
+  if (Notification.permission === "granted") {
+    new Notification(title, { body, icon: "/favicon.ico" });
+  }
+}
+
+export default function Tracker() {
+  const { state, dispatch } = useApp();
+  const checked = state.trackerChecked;
+  const count = checked.size;
+  const total = trackerItems.length;
+  const percent = Math.round((count / total) * 100);
+  const target = state.dailyTarget;
+  const notifEnabled = state.notifEnabled;
+  const targetReachedRef = useRef(false);
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const getMotivation = () => {
+    if (count === 0) return "Mulai hari ini dengan niat yang tulus karena Allah! 🌱";
+    if (count < 4) return "MasyaAllah! Permulaan yang bagus, terus semangat! 💪";
+    if (count < 7) return "Subhanallah! Sudah setengah jalan. Jangan berhenti! ⚡";
+    if (count < 10) return "Luar biasa! Hampir sempurna, satu langkah lagi! 🌟";
+    return "Allahu Akbar! SEMPURNA! Semoga Allah menerima amalmu hari ini! 🏆";
+  };
+
+  useEffect(() => {
+    if (notifEnabled && count >= target && !targetReachedRef.current) {
+      targetReachedRef.current = true;
+      sendNotif(
+        "🎯 Target Harian Tercapai!",
+        `MasyaAllah! Kamu sudah menyelesaikan ${count} amalan hari ini. Istiqomah adalah kunci!`
+      );
+    }
+    if (count < target) {
+      targetReachedRef.current = false;
+    }
+  }, [count, target, notifEnabled]);
+
+  const handleToggleNotif = () => {
+    if (notifEnabled) {
+      dispatch({ type: "SET_NOTIF_ENABLED", enabled: false });
+    } else {
+      requestNotifAndEnable(() => {
+        dispatch({ type: "SET_NOTIF_ENABLED", enabled: true });
+      });
+    }
+  };
+
+  const targetPct = Math.min(100, Math.round((count / target) * 100));
+  const targetReached = count >= target;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            Tracker Amal Harian
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+            {today}
+          </p>
         </div>
-    </footer>
-
-    <script>
-        // ====================================================================================
-        // PERINGATAN KEAMANAN:
-        // API key di bawah ini akan TERLIHAT oleh siapa saja yang membuka halaman ini
-        // (lewat tombol "View Source" / "Inspect Element" di browser).
-        // Cocok HANYA untuk demo/tugas kuliah dengan trafik kecil dan kuota gratis.
-        // JANGAN gunakan key utama/produksi atau key yang terhubung billing berbayar.
-        // Jika key ini disalahgunakan, segera buat key baru & hapus yang lama di
-        // https://aistudio.google.com
-        // ====================================================================================
-        const GEMINI_API_KEY = "AQ.Ab8RN6L2RXHUl8KkoHZ2f31NQffPJzGRSHKelMPSJdetSHxTmQ";
-        const GEMINI_MODEL = "gemini-2.0-flash";
-
-        const appState = {
-            unlockedQuizzes: { 1: true, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false, 11: false, 12: false },
-            quizPerfectScores: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false, 9: false, 10: false },
-            activeQuizId: null,
-            activeQuizIndex: 0,
-            activeQuizScore: 0,
-            isNavigating: false,
-            chatHistory: [],
-            chatLoading: false,
-            trackerData: [
-                { id: 1, title: "Sholat fardhu 5 waktu tepat waktu", desc: "Komitmen utama penegakan tiang tauhid uluhiyah.", checked: false },
-                { id: 2, title: "Membaca Al-Qur'an dan tadabbur makna", desc: "Nutrisi akal harian agar pikiran tidak kosong.", checked: false },
-                { id: 3, title: "Bersedekah secara sembunyi-sembunyi", desc: "Melatih keikhlasan serta memotong sifat tamak duniawi.", checked: false },
-                { id: 4, title: "Membaca Dzikir Pagi dan Petang", desc: "Benteng gaib penangkal anxiety, hasad, dan bisikan syetan.", checked: false },
-                { id: 5, title: "Menahan jempol dari ghibah/debat medsos", desc: "Menjaga lisan digital demi kemurnian pahala iman.", checked: false },
-                { id: 6, title: "Berbakti penuh kepada Ayah dan Ibu", desc: "Mencari ridho Allah melalui kepatuhan adab bersosial.", checked: false },
-                { id: 7, title: "Sabar dan ridho atas ketentuan takdir buruk", desc: "Mekanisme pertahanan batin menerima ketetapan Allah.", checked: false },
-                { id: 8, title: "Menjaga batasan pergaulan lawan jenis", desc: "Menghidupkan sifat rasa malu sebagai cabang keimanan vital.", checked: false },
-                { id: 9, title: "Membaca istighfar minimal 100 kali sehari", desc: "Membersihkan flek hitam batin akibat residu khilaf.", checked: false },
-                { id: 10, title: "Menuntut ilmu agama atau membaca buku", desc: "Memperkuat amunisi ilmu pembasmi racun syubhat zaman.", checked: false }
-            ]
-        };
-
-        const moodBoosters = [
-            "Jangan overthinking soal masa depan. Allah yang menggenggam hari esokmu sudah merancang skenario terbaik.",
-            "Insecure melihat pencapaian orang lain? Ingat, Allah membagi rezeki dan porsi ujian hidup dengan adil.",
-            "Ketika sirkel pertemanan menjauhimu karena prinsip syariat, ketahuilah Allah sedang melindungimu.",
-            "Allah tidak melihat seberapa estetik rupamu, melainkan ketulusan niat dan ketakwaan di hatimu.",
-            "Air mata dalam keheningan doa sepertiga malam jauh lebih berharga daripada jutaan likes di media sosial."
-        ];
-
-        const kisahData = [
-            { nama: "Ali bin Abi Thalib", peran: "Gerbang Ilmu & Keberanian Belia", teks: "Masuk Islam pada usia sangat muda (sekitar 10 tahun). Menunjukkan kesetiaan aqidah tingkat tinggi dengan rela tidur di ranjang Rasulullah SAW saat malam hijrah untuk mengelabui kepungan algojo kafir Quraisy.", icon: "fa-shield-halved", color: "from-blue-500 to-indigo-600" },
-            { nama: "Mus'ab bin Umair", peran: "Duta Dakwah Pertama Islam", teks: "Meninggalkan seluruh fasilitas kemewahan demi mempertahankan kalimat tauhid. Beliau diutus menjadi guru ngaji pertama di Madinah dan sukses besar.", icon: "fa-feather", color: "from-emerald-500 to-teal-600" },
-            { nama: "Usamah bin Zaid", peran: "Panglima Perang Berusia 18 Tahun", teks: "Meskipun sangat muda, beliau ditunjuk langsung oleh Rasulullah SAW untuk memimpin pasukan militer muslim yang di dalamnya terdapat sahabat senior.", icon: "fa-chess-knight", color: "from-amber-500 to-orange-600" },
-            { nama: "Zaid bin Tsabit", peran: "Master Kodifikasi Al-Qur'an", teks: "Anak muda cerdas yang menguasai bahasa asing dalam hitungan minggu. Dipercaya memegang amanah sebagai ketua tim pengumpul Al-Qur'an.", icon: "fa-pen-fancy", color: "from-purple-500 to-violet-600" }
-        ];
-
-        // NEW LOADED MATERIALS (10 MODULES COALESCED PROPERLY)
-        const materiData = {
-            1: {
-                title: "Modul 01: Pondasi Utama Aqidah: Penyelamat Jiwa Remaja Modern",
-                content: `# Pondasi Utama Aqidah: Penyelamat Jiwa Remaja Modern
-
-## Pendahuluan
-Remaja hidup di zaman yang penuh kemudahan, tetapi juga penuh tantangan. Informasi datang tanpa batas, tren berubah sangat cepat, dan tekanan untuk diakui sering kali membuat seseorang kehilangan arah. Di tengah kondisi ini, aqidah menjadi pondasi yang menjaga hati, pikiran, dan perilaku seorang muslim.
-
-Aqidah bukan sekadar pengetahuan tentang agama, melainkan keyakinan yang tertanam kuat dalam hati sehingga membentuk cara berpikir, bersikap, dan menjalani kehidupan.
-
-> "Jika bangunan membutuhkan pondasi yang kokoh, maka kehidupan membutuhkan aqidah yang kuat."
-
----
-
-## 1. Apa Itu Aqidah?
-Secara bahasa, kata aqidah berasal dari istilah Arab al-aqdu, yang bermakna "mengikat" atau "menyimpulkan". Istilah ini juga memiliki arti ar-rabthu (ikatan), al-itsaaqu (mengikat), ats-tsubut (penetapan), dan al-ihkam (penguatan). Dalam konteks ini, aqidah menggambarkan sesuatu yang mengikat erat keyakinan seseorang terhadap kebenaran tertentu. Adapun secara istilah, aqidah adalah keyakinan yang teguh dan pasti tanpa ada keraguan sedikit pun bagi orang yang mempercayainya. Ini mencakup keimanan kepada Allah, malaikat, kitab-kitab-Nya, rasul-rasul-Nya, hari kiamat, serta qada dan qadar. Sebagai dasar keimanan, aqidah berfungsi untuk mengarahkan hidup seorang muslim agar senantiasa berada di jalan yang benar
-
-Aqidah Islam berpusat pada enam rukun iman:
-1. Iman kepada Allah
-2. Iman kepada malaikat
-3. Iman kepada kitab-kitab Allah
-4. Iman kepada rasul-rasul Allah
-5. Iman kepada hari akhir
-6. Iman kepada qada dan qadar
-
----
-
-## 2. Mengapa Remaja Modern Membutuhkan Aqidah yang Kuat?
-
-### a. Banyak Godaan dan Pengaruh Negatif
-Media sosial, pergaulan bebas, narkoba, pornografi, dan budaya yang bertentangan dengan ajaran Islam dapat merusak karakter remaja.
-
-Aqidah yang kuat menjadi benteng yang membuat seseorang mampu berkata:
-> "Saya tidak akan melakukan ini karena Allah SWT melihat saya."
-
-### b. Krisis Identitas
-Banyak remaja bingung tentang tujuan hidupnya, mencari pengakuan dari orang lain, bahkan menilai dirinya berdasarkan jumlah pengikut atau "like".
-
-Aqidah mengajarkan bahwa nilai seseorang tidak ditentukan oleh popularitas, tetapi oleh ketakwaannya kepada Allah SWT.
-
-### c. Masalah Mental dan Emosional
-Tekanan akademik, masalah keluarga, perundungan, dan kegagalan sering membuat remaja merasa putus asa.
-
-Orang yang memiliki aqidah kuat yakin bahwa:
-> Setiap ujian memiliki hikmah dan Allah tidak membebani seseorang di luar kemampuannya.
-
----
-
-## 3. Aqidah sebagai Penyelamat Jiwa
-
-### A. Menumbuhkan Ketenangan Hati
-Ketika seseorang mengenal Allah dengan benar, ia menyadari bahwa hidupnya berada dalam pengawasan dan kasih sayang-Nya.
-
-Firman Allah:
-> "Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram." (QS. Ar-Ra'd: 28)
-
-### B. Memberikan Tujuan Hidup
-Banyak orang hidup tanpa arah sehingga mudah terjerumus pada hal-hal yang merugikan.
-
-Aqidah mengajarkan bahwa tujuan hidup manusia adalah beribadah kepada Allah.
-
-Firman Allah:
-> "Aku tidak menciptakan jin dan manusia melainkan agar mereka beribadah kepada-Ku." (QS. Adz-Dzariyat: 56)
-
-### C. Menjaga dari Perilaku Menyimpang
-Remaja yang memahami aqidah akan sadar bahwa setiap perbuatan akan dimintai pertanggungjawaban.
-
-### D. Membentuk Karakter Mulia
-Aqidah yang benar melahirkan:
-- Kejujuran
-- Tanggung jawab
-- Disiplin
-- Kesabaran
-- Rendah hati
-- Kepedulian terhadap sesama
-
----
-
-## 4. Ciri-Ciri Remaja yang Memiliki Aqidah Kuat
-1. Rajin beribadah
-2. Memiliki prinsip hidup
-3. Optimis dan tidak mudah putus asa
-4. Menjaga akhlak
-5. Bijak menggunakan media sosial
-
----
-
-## 5. Cara Memperkuat Aqidah di Era Modern
-- Memperdalam ilmu agama
-- Memilih lingkungan yang baik
-- Membiasakan ibadah harian
-- Mengontrol penggunaan media sosial
-- Merenungkan tanda-tanda kekuasaan Allah
-
----
-
-## Penutup
-Aqidah adalah pondasi utama kehidupan seorang muslim. Di tengah derasnya arus modernisasi, aqidah menjadi penyelamat jiwa remaja dari kebingungan, penyimpangan, dan keputusasaan.
-
-### Pesan Utama
-> "Remaja yang kuat bukan hanya yang kuat fisiknya, tetapi yang kokoh aqidahnya. Karena aqidah yang benar akan menjaga hati, mengarahkan langkah, dan menyelamatkan kehidupan dunia serta akhirat."
-`,
-            },
-            2: {
-                title: "Modul 02: Mengenal Allah melalui Logika, Ilmu Pengetahuan, Dalil Al-Qur’an dan Hadis",
-                content: `# Mengenal Allah melalui Logika, Ilmu Pengetahuan, Dalil Al-Qur’an dan Hadis
-
-## Pendahuluan
-Alam semesta ini terbentang bukan sekadar sebagai hiasan, melainkan sebagai lembaran "kitab tak tertulis" yang menanti untuk dibaca. Untuk memahami rahasia di baliknya, Sang Khalik membekali manusia dengan instrumen yang luar biasa, yaitu daya nalar dan rasa ingin tahu. Dalam bingkai ajaran Ilahi, proses pencarian pengetahuan bukanlah sekadar urusan duniawi, melainkan bagian dari bentuk ibadah yang akan mengantarkan seseorang pada Sang Pencipta. Itulah sebabnya, Islam menempatkan akal dan ilmu pada posisi penting. Banyak ayat Al-Qur’an yang mengajak manusia untuk berpikir, mengamati alam, dan menggunakan logika untuk sampai pada pengakuan akan Allah.
-
----
-
-## Alam sebagai Tanda Kebesaran Allah
-**QS. Ali ‘Imran 3:190–191**
-
-> **اِنَّ فِىۡ خَلۡقِ السَّمٰوٰتِ وَالۡاَرۡضِ وَاخۡتِلَافِ الَّيۡلِ وَالنَّهَارِ لَاٰيٰتٍ لِّاُولِى الۡاَلۡبَابِ ۚۖ‏ ١٩٠**
->**الَّذِيۡنَ يَذۡكُرُوۡنَ اللّٰهَ قِيَامًا وَّقُعُوۡدًا وَّعَلٰى جُنُوۡبِهِمۡ وَيَتَفَكَّرُوۡنَ فِىۡ خَلۡقِ السَّمٰوٰتِ وَالۡاَرۡضِ​ۚ رَبَّنَا مَا خَلَقۡتَ هٰذَا بَاطِلًا ۚ سُبۡحٰنَكَ فَقِنَا عَذَابَ النَّارِ‏ ١٩١**
-> “Sesungguhnya dalam penciptaan langit dan bumi, dan pergantian malam dan siang terdapat tanda-tanda bagi orang yang berakal ١٩٠”
-> "(yaitu) orang-orang yang mengingat Allah sambil berdiri, duduk atau dalam keadaan berbaring, dan mereka memikirkan tentang penciptaan langit dan bumi (seraya berkata), "Ya Tuhan kami, tidaklah Engkau menciptakan semua ini sia-sia; Mahasuci Engkau, lindungilah kami dari azab neraka ١٩١"
-
-Pesan utama dari kedua ayat ini adalah keseimbangan antara kecerdasan spiritual (iman) dan kecerdasan intelektual (akal). Alam semesta beserta seluruh isinya adalah tanda kebesaran Allah bagi Ulul Albab (orang-orang yang berakal).
-
----
-
-## Argumen Kausalitas
-**QS. Ath-Thur 52:35**
-> “Apakah mereka tercipta tanpa sesuatu pun ataukah mereka yang menciptakan (diri mereka sendiri)?”
-
-* Tidak mungkin sesuatu ada tanpa sebab
-* Manusia tidak bisa menciptakan dirinya sendiri
-* Harus ada Pencipta pertama
-
----
-
-## Keteraturan Alam Semesta
-**QS. Al-Mulk 67:3**
-> “Engkau tidak akan melihat ketidakseimbangan pada ciptaan الرحمن…”
-
-* Alam semesta teratur dan konsisten
-* Ini menunjukkan adanya Pengatur Maha Bijaksana
-
----
-
-## Sains sebagai Jalan Tafakkur
-**QS. Fussilat 41:53**
-> “Kami akan memperlihatkan kepada mereka tanda-tanda Kami di segenap ufuk dan pada diri mereka sendiri…”
-
-* Sains dan penelitian alam memperkuat iman
-* Semakin dalam ilmu, semakin jelas tanda-tanda ketuhanan
-
----
-
-## Fitrah Manusia Mengenal Tuhan
-**Hadis HR. Bukhari & Muslim**
-> “Setiap anak dilahirkan dalam keadaan fitrah…”
-
-* Manusia memiliki kecenderungan alami mengenal Tuhan
-* Akal bekerja sejalan dengan fitrah ini
-
----
-
-## Kesimpulan
-1. Allah memerintahkan akan akal dan logika
-2. Alam adalah tanda-tanda keberadaan Allah
-3. Ilmu pengetahuan memperkuat keimanan
-4. Fitrah manusia diarahkan untuk mengenal Pencipta
-`,
-            },
-            3: {
-                title: "Modul 03: Menghentikan Overthinking dengan Tauhid Rububiyah",
-                content: `# Menghentikan Overthinking dengan Tauhid Rububiyah
-
-## Pendahuluan
-Remaja sering merasa beban hidup terlalu berat ketika mereka mencoba mengatur semuanya sendiri. Ketika logika disalurkan ke dalam keyakinan yang benar, overthinking bisa berubah menjadi tawakal yang penuh berkat.
-
----
-
-## Apa itu Tauhid Rububiyah?
-Tauhid rububiyah adalah keyakinan bahwa Allah adalah satu-satunya Rabb: Pencipta, Pemilik, Pengatur, Penguasa, dan Pemelihara alam semesta.
-
-**QS. Al-Fatihah 1:2**
-> “Segala puji bagi Allah, Rabb semesta alam.”
-
----
-
-## Mengapa Overthinking Terjadi?
-* Merasa semua hasil bergantung pada usaha sendiri
-* Takut gagal dan ingin mengontrol masa depan
-* Mengabaikan fakta bahwa takdir ada dalam genggaman Allah
-
----
-
-## Tauhid Rububiyah sebagai Obat Mental
-**QS. At-Tawbah 9:51**
-> “Katakanlah: tidak akan menimpa kami kecuali apa yang telah Allah tetapkan bagi kami…”
-
-* Overthinking tidak mengubah takdir
-* Hanya menguras energi mental dan ruhani
-* Ketika keyakinan pada Allah kuat, kecemasan berkurang
-
----
-
-## Prinsip Hidup Seimbang
-1. Berusaha sebaik mungkin (ikhtiar)
-2. Berdoa dan memohon pertolongan Allah
-3. Bertawakal pada hasil akhir
-
----
-
-## Langkah Praktis
-1. Ganti kalimat “aku harus mengatur semuanya” dengan “aku berusaha, Allah yang menentukan hasil”.
-2. Catat apa yang bisa dikontrol dan apa yang hanya milik Allah.
-3. Hentikan simulasi skenario masa depan yang tidak realistis.
-4. Perbanyak dzikir dan doa untuk menenangkan hati.
-
----
-
-## Penutup
-Ketika masalah kehidupan diserahkan kepada Rabb, maka beban bukan lagi sekadar tanggung jawab pribadi tetapi amanah dari Allah. Itulah jalan keluar dari overthinking dan jalan masuk ke ketenangan hati.
-`,
-            },
-            4: {
-                title: "Modul 04: Merdeka dari Kecanduan Validasi Makhluk melalui Tauhid Uluhiyah",
-                content: `# Merdeka dari Kecanduan Validasi Makhluk melalui Tauhid Uluhiyah
-
-## Pendahuluan
-Hidup sebagai remaja di era digital membuat siapa pun mudah terjebak mencari persetujuan orang lain. Tauhid uluhiyah mengajak kita merdekatkan tujuan hidup kepada Allah, bukan kepada opini manusia.
-
----
-
-## Apa itu Tauhid Uluhiyah?
-Tauhid uluhiyah adalah keyakinan bahwa hanya Allah yang berhak disembah, dicintai, dan dituju dalam setiap ibadah.
-
-**QS. Adz-Dzariyat 51:56**
-> “Tidaklah Aku menciptakan jin dan manusia kecuali untuk beribadah kepada-Ku.”
-
----
-
-## Riya' dan Kecanduan Validasi
-* Mencari pujian sebagai motivasi ibadah
-* Merasa nilai diri naik turun karena komentar orang lain
-* Melupakan tujuan ibadah untuk Allah semata
-
-**QS. Al-Ma'un** mengingatkan bahwa amal yang dirusak oleh riya' sia-sia.
-
----
-
-## Akibat Kecanduan Validasi
-1. Hilangnya ketulusan hati
-2. Ibadah terasa berat dan palsu
-3. Rasa percaya diri tergantung likes dan pujian
-
----
-
-## Detoks Sikap
-1. Tanyakan sebelum berbuat: “Apakah Allah ridha dengan ini?”
-2. Lakukan ibadah tanpa penonton.
-3. Jadikan pujian manusia sebagai ujian, bukan sebagai tujuan utama.
-4. Pilih lingkungan yang menghargai keikhlasan.
-
----
-
-## Hikmah Tauhid Uluhiyah
-Menjadi bebas dari kecanduan validasi berarti menjadi lebih fokus pada kualitas ibadah. Hasilnya adalah hati yang ringan, niat yang jernih, dan ketenangan ketika tidak semua orang setuju.
-`,
-            },
-            5: {
-                title: "Modul 05: Menyembuhkan Insecure dengan Pendekatan Asma' wa Shifat",
-                content: `# Menyembuhkan Insecure dengan Pendekatan Asma' wa Shifat
-
-## Pendahuluan
-Insecure membuat remaja terus membandingkan diri dengan orang lain. Belajar dari nama-nama Allah membantu mengubah pandangan diri menjadi lebih sehat dan kuat.
-
----
-
-## Mengapa Asma' wa Shifat?
-Asma' wa Shifat adalah nama-nama dan sifat-sifat Allah yang sempurna. Menghayati-Nya memberi ruang bagi hati untuk merasa cukup dengan apa yang Allah berikan.
-
----
-
-## Sifat Allah yang Menenangkan
-* **Al-Basith** — Allah melapangkan rezeki dan peluang.
-* **Al-Wadud** — Allah Maha Penyayang yang menerima kita apa adanya.
-* **Al-Mushawwir** — Allah Maha Membentuk, sehingga setiap perbedaan memiliki makna.
-
-**QS. At-Tin: 4**
-> “Sungguh, Kami telah menciptakan manusia dalam bentuk yang sebaik-baiknya.”
-
----
-
-## Menyembuhkan Insecure
-1. Kenali nama-nama Allah yang relevan dengan kegundahanmu.
-2. Renungkan maknanya.
-3. Ucapkan doa agar Allah menjadikanmu tampilan terbaik versi-Nya.
-
----
-
-## Contoh Praktis
-* Ketika merasa rendah diri, ingat Al-Wadud dan Al-Quddus.
-* Ketika membandingkan fisik, ingat Al-Mushawwir dan Allah membuatmu unik.
-* Ketika takut gagal, ingat Ar-Razzaq bahwa Allah memberi rezeki kepada siapa pun yang berusaha.
-
----
-
-## Penutup
-Insecure bukan hanya masalah sosial, tapi juga spiritual. Dengan pendekatan Asma' wa Shifat, rasa tidak aman berubah menjadi keyakinan bahwa Allah Maha Menyukai hamba-Nya yang terus berproses.
-`,
-            },
-            6: {
-                title: "Modul 06: Membangun Integritas Karakter Unggul lewat Iman kepada Malaikat",
-                content: `# Membangun Integritas Karakter Unggul lewat Iman kepada Malaikat
-
-## Pendahuluan
-Iman kepada malaikat membantu remaja menyadari bahwa setiap perilaku kecil dicatat. Ini menjadi fondasi integritas yang kuat walau tidak ada yang melihat.
-
----
-
-## Siapa Malaikat?
-Malaikat adalah makhluk yang selalu taat kepada Allah dan melaksanakan perintah-Nya tanpa menolak.
-
-**QS. Qaf: 18**
-> “Tidak ada suatu kata pun yang diucapkannya melainkan ada di sisinya malaikat pengawas yang selalu siap mencatat.”
-
----
-
-## Integritas dalam Kehidupan Sehari-hari
-* Berbuat baik meski tidak ada pujian
-* Menjaga ucapan dan tindakan saat sendiri
-* Disiplin dalam ibadah dan tanggung jawab
-
-**QS. At-Tahrim: 6** mengingatkan agar kita menjaga hati dan keluarga seperti menjaga baitullah.
-
----
-
-## Pelajaran dari Malaikat
-1. Kerja tanpa menunda.
-2. Ketaatan tanpa kompromi.
-3. Fokus pada tugas tanpa pamrih.
-
----
-
-## Praktik Integritas
-1. Bila menyelesaikan tugas, lakukan karena Allah.
-2. Tahan diri dari gossip atau hoaks walau tidak dilihat orang.
-3. Catat niat sebelum bertindak agar hati tetap lurus.
-
----
-
-## Penutup
-Iman kepada malaikat bukan hanya tentang makhluk ghaib, tetapi tentang menjadi pribadi yang dapat dipercaya, konsisten, dan mampu menjaga kata-kata serta tindakan dalam setiap kondisi.
-`,
-            },
-            7: {
-                title: "Modul 07: Menjadikan Al-Qur'an sebagai Petunjuk Operasional Kehidupan",
-                content: `# Menjadikan Al-Qur'an sebagai Petunjuk Operasional Kehidupan
-
-## Konsep Petunjuk Operasional
-Al-Qur'an adalah buku panduan hidup, bukan sekadar koleksi ayat.
-
-**QS. Al-Isra': 9**
-> “Sesungguhnya Al-Qur'an ini memberikan petunjuk kepada jalan yang lebih lurus.”
-
----
-
-## Formula 4T
-1. Tilawah (membaca)
-2. Tadabbur (meresapi)
-3. Tafahhum (memahami)
-4. Tanfidz (mengeksekusi)
-`,
-            },
-            8: {
-                title: "Modul 08: Menjadikan Nabi Muhammad SAW sebagai Satu-Satunya Idola Hakiki",
-                content: `# Menjadikan Nabi Muhammad SAW sebagai Satu-Satunya Idola Hakiki
-
-## Mengapa Rasulullah Adalah Idola yang Tepat?
-Dia adalah suri teladan yang langsung divalidasi oleh Allah.
-
-**QS. Al-Ahzab: 21**
-> “Sungguh, telah ada pada (diri) Rasulullah itu suri teladan yang baik bagimu...”
-
----
-
-## Pelajaran dari Masa Muda Nabi
-* Mandiri secara finansial
-* Aktif dalam dakwah sosial
-* Mendapat gelar Al-Amin sebelum kenabian
-`,
-            },
-            9: {
-                title: "Modul 09: Membangun Mental Baja Melalui Kunci Iman kepada Takdir",
-                content: `# Membangun Mental Baja Melalui Kunci Iman kepada Takdir
-
-## Prinsip Mental Baja
-* Allah Maha Mengetahui dan Maha Adil
-* Takdir adalah ujian, bukan hukuman
-* Segala kesulitan selalu disertai kemudahan
-
-**QS. Al-Hadid: 22-23**
-> “Semua bencana yang menimpa di bumi dan dirimu telah tertulis dalam Kitab sebelum Kami mewujudkannya...”
-
-**QS. Al-Insyirah 5-6** menegaskan bahwa kemudahan datang bersamaan dengan kesulitan.
-`,
-            },
-            10: {
-                title: "Modul 10: Ihsan: Seni Merasakan Pengawasan Tuhan Sepanjang Waktu",
-                content: `# Ihsan: Seni Merasakan Pengawasan Tuhan Sepanjang Waktu
-
-## Pengertian Ihsan
-Ihsan adalah beribadah seolah-olah engkau melihat Allah. Jika belum bisa, maka sadarilah bahwa Dia melihatmu.
-
-**HR. Muslim**
-> “Engkau menyembah Allah seolah-olah engkau melihat-Nya. Jika engkau tidak mampu melihat-Nya, maka sesungguhnya Dia melihatmu.”
-
----
-
-## Seni Muraqabah
-* Menata niat sebelum berbuat
-* Menjaga kualitas saat berbuat
-* Memelihara integritas saat sendirian
-
-**QS. Qaf: 16** menegaskan bahwa Allah lebih dekat daripada urat leher kita.
-`,
-            }
-        };
-
-        // --- QUIZ QUESTIONS GENERATOR (5 CONFIGURABLE SHARP QUESTIONS PER MODULE) ---
-        const quizDatabase = {
-            1: [
-                { q: "Secara bahasa, kata 'aqidah' berasal dari kata 'aqada yang berarti...", o: ["Simpul/ikatan yang kuat", "Kebebasan tanpa batas", "Pengetahuan teoritis", "Perdebatan fikih"], a: 0 },
-                { q: "Pondasi utama aqidah Islam bersandar penuh pada...", o: ["Pendapat tokoh pemuda", "Enam rukun iman", "Tren budaya populer", "Status sosial manusia"], a: 1 },
-                { q: "Mengapa aqidah kuat menjadi jawaban atas krisis identitas remaja?", o: ["Membuat terkenal di medsos", "Menilai diri dari ketakwaan bukan popularitas", "Mendapatkan banyak materi", "Memicu sifat ingin dipuji"], a: 1 },
-                { q: "Ketenangan hati yang hakiki tertulis dalam Al-Qur'an diperoleh dengan...", o: ["Mengingat Allah", "Menimbun kekayaan", "Mengejar validasi teman", "Menghindari lingkaran sosial"], a: 0 },
-                { q: "Karakter mulia yang langsung lahir dari pancaran aqidah yang benar adalah...", o: ["Sifat oportunis", "Jujur dan tanggung jawab", "Konsumtif dan pamer", "Mudah putus asa"], a: 1 }
-            ],
-            2: [
-                { q: "Apa sebutan bagi tanda-tanda kebesaran Allah yang terbentang di alam semesta?", o: ["Ayat Qauliyah", "Ayat Kauniyah", "Ayat Insaniyah", "Ayat Fikriyah"], a: 1 },
-                { q: "Argumen kausalitas (sebab-akibat) dalam QS. Ath-Thur mengajak akal sadar bahwa...", o: ["Alam ada dengan sendirinya", "Harus ada Pencipta Pertama (Allah)", "Manusia menciptakan dirinya", "Semua terjadi tanpa aturan"], a: 1 },
-                { q: "Keteraturan sistem kosmos yang sempurna tanpa cacat diulas dalam surah...", o: ["QS. Al-Mulk: 3", "An-Nas", "Al-Baqarah", "Al-Lahab"], a: 0 },
-                { q: "Setiap anak dilahirkan membawa kecenderungan alami mengenal Tuhan yang disebut...", o: ["IQ", "Ego", "Fitrah", "Syubhat"], a: 2 },
-                { q: "Apa fungsi utama sains dan ilmu pengetahuan dalam Islam?", o: ["Alat menjauhkan diri dari iman", "Sarana tafakkur memperkuat iman", "Menggantikan peran wahyu", "Sekadar mencari materi"], a: 1 }
-            ],
-            3: [
-                { q: "Apakah yang dimaksud dengan Tauhid Rububiyah?", o: ["Keyakinan Allah satu-satunya Rabb Pengatur alam", "Mengarahkan ibadah pada makhluk", "Mencari pujian manusia", "Menolak takdir buruk"], a: 0 },
-                { q: "Secara psikologis, akar utama dari masalah overthinking adalah...", o: ["Kurang tidur", "Ilusi ingin mengontrol segala masa depan", "Terlalu rajin beribadah", "Menerima takdir dengan ikhlas"], a: 1 },
-                { q: "Kalimat bijak apa yang memotong overthinking berbasis rububiyah?", o: ["Semua mutlak kendali saya", "Aku berusaha, Allah yang mengatur hasil akhir", "Hari esok pasti berantakan", "Tidak perlu berusaha sama sekali"], a: 1 },
-                { q: "QS. At-Tawbah: 51 menegaskan ketenangan qadar bahwa...", o: ["Manusia bisa mengubah segalanya", "Tidak menimpa kita kecuali apa yang Allah tetapkan", "Kekhawatiran mengubah takdir", "Dunia tempat balasan"], a: 1 },
-                { q: "Overthinking digambarkan sebagai tindakan keliru yaitu...", o: ["Mencoba menjadi Tuhan kecil dalam pikiran", "Bertaubat dengan sungguh-sungguh", "Melakukan ikhtiar maksimal", "Berpasrah setelah berusaha"], a: 0 }
-            ],
-            4: [
-                { q: "Mengarahkan seluruh tujuan ibadah dan cinta absolut hanya kepada Allah disebut...", o: ["Tauhid Rububiyah", "Tauhid Uluhiyah", "Tauhid Asma' wa Shifat", "Riya'"], a: 1 },
-                { q: "Keinginan tersembunyi agar amalan ibadah dilihat dan dipuji manusia dinamakan...", o: ["Ihsan", "Riya'", "Qana'ah", "Tafakkur"], a: 1 },
-                { q: "Di sisi Allah, standar kemuliaan sejati seorang hamba diukur dari...", o: ["Jumlah pengikut sosial media", "Ketakwaannya", "Rupa fisik yang estetik", "Isi saldo rekening"], a: 1 },
-                { q: "Sifat dasar penilaian manusia yang membuatnya tidak layak jadi pusat tujuan adalah...", o: ["Stabil selamanya", "Berubah-ubah dan subjektif", "Pasti adil", "Selalu memuaskan"], a: 1 },
-                { q: "Latihan praktis apa yang paling efektif mendetoks kecanduan validasi?", o: ["Pamer ibadah di medsos", "Melatih ibadah rahasia tanpa penonton", "Mencari lingkaran sirkel elite", "Berdebat argumen di internet"], a: 1 }
-            ],
-            5: [
-                { q: "Sifat Allah yang menyembuhkan insecure fisik karena Dia Maha Membentuk Rupa adalah...", o: ["Ar-Razzaq", "Al-Mushawwir", "Al-Hakam", "Al-Alim"], a: 1 },
-                { q: "Dalam QS. At-Tin: 4, Allah menegaskan manusia diciptakan dalam bentuk...", o: ["Sebaik-baiknya", "Asal-asalan", "Produk gagal", "Penuh kelemahan permanen"], a: 0 },
-                { q: "Sifat Allah yang menjadi penawar cemas tertinggal rezeki materi dari orang lain adalah...", o: ["Al-Wadud", "Ar-Razzaq", "Al-Khaliq", "Al-Mushawwir"], a: 1 },
-                { q: "Obat batin ketika merasa kesepian dan tidak berharga adalah mendekat pada Allah...", o: ["Al-Wadud (Maha Pencinta)", "Al-Hakam", "Al-Muthaffifin", "Al-Basith"], a: 0 },
-                { q: "Apa kepanjangan langkah praktis 3M untuk menyembuhkan insecure?", o: ["Membaca, Menulis, Menghafal", "Mengenal, Menghayati, Menerima (Ridha)", "Melihat, Membandingkan, Meratapi", "Meminta, Memaksa, Memusuhi"], a: 1 }
-            ],
-            6: [
-                { q: "Integritas moral sejati diartikan sebagai tindakan melakukan hal yang benar ketika...", o: ["Ada kamera CCTV dunia", "Dilihat oleh guru/atasan", "Tidak ada satu orang pun melihat", "Mendapat imbalan uang"], a: 2 },
-                { q: "Malaikat yang ditugaskan mencatat amal kebaikan dan keburukan secara real-time adalah...", o: ["Jibril & Mikail", "Raqib & Atid", "Malik & Ridwan", "Munkar & Nakir"], a: 1 },
-                { q: "Sifat mutlak malaikat dalam menjalankan tugas perintah dari Allah adalah...", o: ["Sering menunda-nunda", "Patuh sempurna dan profesional (itqan)", "Memiliki kepentingan pribadi", "Mengeluh jika tugas berat"], a: 1 },
-                { q: "Iman kepada malaikat mengubah motif takut hukum manusia menjadi takut pada...", o: ["Sirkel pertemanan", "Konsekuensi Ilahi", "Kehilangan popularitas", "Opini publik"], a: 1 },
-                { q: "Malaikat menyukai hal suci, sehingga kita dilarang merusak lisan dengan...", o: ["Zikir harian", "Hoaks, ghibah, dan fitnah", "Membaca buku sains", "Nasihat kebaikan"], a: 1 }
-            ],
-            7: [
-                { q: "Menjadikan Al-Qur'an sebagai petunjuk operasional diibaratkan membaca...", o: ["Buku fiksi hiburan", "Buku panduan (Manual Book) kehidupan", "Katalog belanja", "Pajangan dinding"], a: 1 },
-                { q: "SOP Al-Qur'an ketika menerima informasi miring agar terhindar dari hoaks adalah...", o: ["Langsung menyebarkannya", "Tabayyun (cek dan ricek)", "Membuat perdebatan", "Abaikan tanpa peduli"], a: 1 },
-                { q: "Ayat terpanjang (QS. Al-Baqarah: 282) mengatur SOP yang sangat krusial yaitu...", o: ["Tata cara perang", "Administrasi utang-piutang", "Gaya bicara santun", "Pembagian zakat"], a: 1 },
-                { q: "Urutan formula 4T untuk membumikan nilai Al-Qur'an adalah...", o: ["Tilawah, Tadabbur, Tafahhum, Tanfidz", "Tonton, Tulis, Tanya, Tinggalkan", "Terka, Tuduh, Tolak, Terima", "Tidur, Tenang, Tawa, Tangis"], a: 0 },
-                { q: "Ummul Mukminin Aisyah menyatakan bahwa akhlak Rasulullah SAW adalah...", o: ["Sangat kaku", "Al-Qur'an berjalan", "Hanya teori", "Sesuai tren makkah"], a: 1 }
-            ],
-            8: [
-                { q: "Mengidolakan figur secara berlebihan hingga mengabaikan kesalahan disebut krisis...", o: ["Celebrity worship", "Resiliensi baja", "Tauhid uluhiyah", "Muraqabah"], a: 0 },
-                { q: "Di masa mudanya, Rasulullah SAW mandiri finansial dengan bekerja sebagai...", o: ["Pegawai kantor negara", "Pengembala kambing dan berdagang", "Nelayan pantai", "Petani kebun"], a: 1 },
-                { q: "Aliansi kemanusiaan pemuda Makkah yang diikuti Nabi usia 20 tahunan bernama...", o: ["Hilful Fudhul", "Fathul Makkah", "Lauh Mahfuzh", "Baitul Maqdis"], a: 0  },
-                { q: "Hadis 'Anta ma'a man ahbabta' memiliki arti psikologis yang dalam yaitu...", o: ["Kamu bebas memilih teman", "Kamu akan bersama dengan orang yang kamu cintai", "Idola tidak menentukan nasib", "Cinta dunia membawa sukses"], a: 1 },
-                { q: "Langkah nyata membumikan Rasulullah sebagai idola sejati adalah...", o: ["Hanya hafal namanya saja", "Membaca Sirah Nabawiyah dan amalkan sunnah", "Meniru gaya hidup artis", "Menolak mempelajari sejarah"], a: 1 }
-            ],
-            9: [
-                { q: "Kemampuan untuk bangkit dari keterpurukan dan adaptif terhadap ujian dinamakan...", o: ["Overthinking", "Resiliensi mental", "Oportunis", "Riya'"], a: 1 },
-                { q: "Sikap utama seorang mukmin yang menakjubkan menurut hadis riwayat Muslim adalah...", o: ["Bersyukur saat senang, bersabar saat susah", "Mengeluh setiap saat", "Sombong ketika sukses", "Putus asa ketika gagal"], a: 0 },
-                { q: "QS. Al-Insyirah menegaskan solusi kekuatan berada...", o: ["Jauh setelah ujian selesai", "Include bersama/beserta kesulitan tersebut", "Hanya untuk orang kaya", "Sesuai hitungan matematika"], a: 1 },
-                { q: "Kalimat thayyibah yang diucapkan saat tertimpa musibah takdir buruk adalah...", o: ["Andai saja aku kaya", "Qaddarullah wa maa sya'a fa'ala", "Ini tidak adil", "Astagfirullah tanpa sadar"], a: 1 },
-                { q: "Orang beraqidah kuat membatasi stres dengan fokus pada...", o: ["Hal yang bisa dikontrol (respons iman)", "Hal di luar kendali", "Kesalahan orang lain", "Masa lalu yang luput"], a: 0 }
-            ],
-            10: [
-                { q: "Puncak tertinggi spiritualitas setelah Islam dan Iman adalah...", o: ["Fikih", "Ihsan", "Ego", "Sains"], a: 1 },
-                { q: "Maqam Muraqabah dalam konsep Ihsan memiliki arti...", o: ["Seakan kita melihat Allah", "Sadar penuh bahwa Allah pasti melihat kita", "Menyendiri di dalam gua", "Melupakan syariat dunia"], a: 1 },
-                { q: "Pengawasan Allah dalam Ihsan dianalogikan secara indah berupa...", o: ["CCTV sipir penjara yang mencari salah", "Tatapan bangga penuh kasih sayang", "Ancaman yang mencekam", "Ketidakpedulian mutlak"], a: 1 },
-                { q: "Allah mengetahui dialog batin yang dibisikkan hati manusia tertulis di...", o: ["QS. Qaf: 16", "QS. Al-Mulk", "QS. At-Tin", "QS. Ath-Thur"], a: 0 },
-                { q: "Dampak psikologis utama bagi orang yang menguasai seni Ihsan adalah...", o: ["Mudah merasa kesepian", "Merdeka dari budak penilaian manusia", "Sangat gila pujian", "Bekerja asal-asalan"], a: 1 }
-            ],
-            // 2 AKBAR FINAL QUIZZES (COMBINED GENERATOR)
-            11: [
-                { q: "Pondasi utama penegakan kalimat tauhid murni berpusat pada...", o: ["Nilai materi", "Rukun Iman", "Budaya tren", "Opini sirkel"], a: 1 },
-                { q: "SOP validasi berita agar remaja terhindar dari fitnah digital dinamakan...", o: ["Riya'", "Tabayyun", "Tafakkur", "Muraqabah"], a: 1 },
-                { q: "Al-Qur'an berfungsi sebagai 'Manual Book' yang berarti petunjuk...", o: ["Sampingan", "Operasional kehidupan", "Pajangan sakral", "Teori kuno"], a: 1 },
-                { q: "Menghapus overthinking dilakukan dengan bersandar pada sifat Allah Pengatur yaitu...", o: ["Tauhid Rububiyah", "Riya'", "Insecure", "Sains murni"], a: 0 },
-                { q: "Ciri pemuda beraqidah kuat dalam bermedia sosial adalah...", o: ["Asal sebar hoaks", "Bijak untuk kemaslahatan umat", "Kecanduan validasi likes", "Berdebat kusir harian"], a: 1 }
-            ],
-            12: [
-                { q: "Orang yang bermatatitipkan nilai Ihsan, akan jujur dalam sepi karena tahu...", o: ["Ada polisi dunia", "Allah Maha Menyaksikan", "Takut dinilai jelek kawan", "Ingin dipuji ikhlas"], a: 1 },
-                { q: "Hadis 'Anta ma'a man ahbabta' mengajarkan kita untuk hati-hati memilih...", o: ["Makanan harian", "Idola / Figur rujukan hati", "Merek gadget", "Pakaian olahraga"], a: 1 },
-                { q: "Sifat Allah Al-Mushawwir menyembuhkan batin pemuda dari racun...", o: ["Overthinking takdir", "Insecure fisik & rupa", "Korupsi waktu", "Krisis identitas"], a: 1 },
-                { q: "Resiliensi mental baja melahirkan karakter mukmin yang pantang...", o: ["Bersyukur", "Putus asa dari rahmat Allah", "Ikhtiar mencari jalan", "Bersujud khusyuk"], a: 1 },
-                { q: "CCTV langit mencatat amalan real-time tanpa jeda dikawal oleh...", o: ["Manusia", "Malaikat Raqib & Atid", "Sains modern", "Sirkel pertemanan"], a: 1 }
-            ]
-        };
-
-        // --- CORE APPLICATION ROUTER ENGINE (WITH ENTER/EXIT TRANSITION ANIMATION) ---
-        function navigateTo(viewId) {
-            const targetView = document.getElementById(`view-${viewId}`);
-            if(!targetView) return;
-
-            // Prevent overlapping navigations while exit animation is running
-            if(appState.isNavigating) return;
-
-            const currentView = document.querySelector('.app-view:not(.hidden)');
-
-            // Dropdown autohide
-            document.getElementById('global-dropdown').classList.add('hidden');
-
-            // If the target is already the active view, nothing to animate
-            if(currentView === targetView) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-
-            const performSwitch = () => {
-                document.querySelectorAll('.app-view').forEach(view => {
-                    view.classList.add('hidden');
-                    view.classList.remove('animate-fadeIn', 'view-exiting');
-                });
-
-                targetView.classList.remove('hidden');
-                void targetView.offsetWidth; // Trigger reflow to restart animation
-                targetView.classList.add('animate-fadeIn');
-
-                window.scrollTo(0, 0);
-                appState.isNavigating = false;
-            };
-
-            if(currentView) {
-                appState.isNavigating = true;
-                currentView.classList.remove('animate-fadeIn');
-                currentView.classList.add('view-exiting');
-
-                // Wait for the exit animation to finish before showing the next view
-                let exited = false;
-                const onAnimEnd = () => {
-                    if(exited) return;
-                    exited = true;
-                    currentView.removeEventListener('animationend', onAnimEnd);
-                    performSwitch();
-                };
-                currentView.addEventListener('animationend', onAnimEnd);
-
-                // Fallback in case animationend doesn't fire
-                setTimeout(() => { if(!exited) { exited = true; performSwitch(); } }, 300);
-            } else {
-                performSwitch();
-            }
-        }
-
-        function toggleGlobalMenu() {
-            document.getElementById('global-dropdown').classList.toggle('hidden');
-        }
-
-        function refreshMoodBooster() {
-            const randomQuote = moodBoosters[Math.floor(Math.random() * moodBoosters.length)];
-            document.getElementById('mood-text').innerText = `"${randomQuote}"`;
-        }
-
-        // --- RENDER METHODS ---
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
-        function renderInlineMarkdown(text) {
-            let result = escapeHtml(text);
-            result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            result = result.replace(/__(.+?)__/g, '<strong>$1</strong>');
-            result = result.replace(/\*(.+?)\*/g, '<em>$1</em>');
-            result = result.replace(/_(.+?)_/g, '<em>$1</em>');
-            return result;
-        }
-
-        function renderMarkdown(markdown) {
-            const lines = markdown.split(/\r?\n/);
-            let html = '';
-            let inList = false;
-            let listType = null;
-            let inBlockquote = false;
-
-            const closeList = () => {
-                if (inList) {
-                    html += listType === 'ol' ? '</ol>' : '</ul>';
-                    inList = false;
-                    listType = null;
-                }
-            };
-
-            const closeBlockquote = () => {
-                if (inBlockquote) {
-                    html += '</blockquote>';
-                    inBlockquote = false;
-                }
-            };
-
-            lines.forEach(line => {
-                const trimmed = line.trim();
-                if (!trimmed) {
-                    closeList();
-                    closeBlockquote();
-                    html += '<p class="text-slate-700 leading-relaxed font-medium mb-4">&nbsp;</p>';
-                    return;
-                }
-
-                if (/^---+$/.test(trimmed)) {
-                    closeList();
-                    closeBlockquote();
-                    html += '<hr class="border-slate-200 my-6" />';
-                    return;
-                }
-
-                const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
-                const blockquoteMatch = trimmed.match(/^>\s?(.*)$/);
-                const ulMatch = trimmed.match(/^[-*+]\s+(.*)$/);
-                const olMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
-
-                if (headingMatch) {
-                    closeList();
-                    closeBlockquote();
-                    const level = headingMatch[1].length;
-                    const content = renderInlineMarkdown(headingMatch[2]);
-                    html += `<h${level} class="font-bold mt-6 mb-3 text-slate-900">${content}</h${level}>`;
-                } else if (blockquoteMatch) {
-                    closeList();
-                    if (!inBlockquote) {
-                        html += '<blockquote class="pl-4 border-l-4 border-teal-500 italic text-slate-600 my-4">';
-                        inBlockquote = true;
-                    }
-                    html += renderInlineMarkdown(blockquoteMatch[1]) + ' ';
-                } else if (ulMatch) {
-                    closeBlockquote();
-                    if (!inList || listType !== 'ul') {
-                        closeList();
-                        html += '<ul class="list-disc ml-6 space-y-2 mb-4">';
-                        inList = true;
-                        listType = 'ul';
-                    }
-                    html += `<li>${renderInlineMarkdown(ulMatch[1])}</li>`;
-                } else if (olMatch) {
-                    closeBlockquote();
-                    if (!inList || listType !== 'ol') {
-                        closeList();
-                        html += '<ol class="list-decimal ml-6 space-y-2 mb-4">';
-                        inList = true;
-                        listType = 'ol';
-                    }
-                    html += `<li>${renderInlineMarkdown(olMatch[2])}</li>`;
-                } else {
-                    closeList();
-                    closeBlockquote();
-                    html += `<p class="text-slate-700 leading-relaxed font-medium mb-4">${renderInlineMarkdown(trimmed)}</p>`;
-                }
-            });
-
-            closeList();
-            closeBlockquote();
-            return html;
-        }
-
-        function renderMateriGrid() {
-            const container = document.getElementById('materi-grid');
-            container.innerHTML = '';
-            Object.keys(materiData).sort((a, b) => a - b).forEach(id => {
-                const m = materiData[id];
-                const firstContentLine = m.content.split(/\r?\n/).find(line => line.trim() && !/^#/.test(line.trim()));
-                const preview = firstContentLine ? firstContentLine.trim() : m.title;
-                const card = document.createElement('div');
-                card.className = "materi-grid-item bg-white border-2 border-slate-100 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all flex flex-col justify-between hover:scale-105 hover:-translate-y-1";
-                card.innerHTML = `
-                    <div>
-                        <span class="bg-teal-50 text-teal-700 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider">Modul 0${id}</span>
-                        <h3 class="font-extrabold text-slate-900 text-lg font-heading leading-snug mt-2 mb-3">${m.title}</h3>
-                        <p class="text-xs text-slate-500 line-clamp-3 font-medium">${preview}</p>
-                    </div>
-                    <button onclick="openMateriDetail(${id})" class="mt-5 w-full bg-slate-900 hover:bg-teal-600 text-white font-black text-xs py-3 rounded-xl transition uppercase tracking-wider btn-ripple">Baca Selengkapnya</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function openMateriDetail(id) {
-            const item = materiData[id];
-            if(!item) return;
-
-            document.getElementById('detail-materi-badge').innerText = `Modul 0${id}`;
-            document.getElementById('detail-materi-title').innerText = item.title;
-
-            const bodyBox = document.getElementById('detail-materi-body');
-            bodyBox.classList.remove('detail-content');
-            void bodyBox.offsetWidth; // Trigger reflow to restart animation
-            bodyBox.classList.add('detail-content');
-            bodyBox.innerHTML = renderMarkdown(item.content);
-
-            // Unlock current module quiz
-            appState.unlockedQuizzes[id] = true;
-            renderQuizMenuGrid();
-
-            const quizBtn = document.getElementById('detail-materi-quiz-btn');
-            quizBtn.innerText = `Buka Evaluasi Kuis 0${id}`;
-            quizBtn.onclick = () => { startQuizGame(id); };
-
-            // Navigate (handles its own scroll-to-top with animation)
-            navigateTo('materi-detail');
-        }
-
-        function renderQuizMenuGrid() {
-            const container = document.getElementById('quiz-grid');
-            container.innerHTML = '';
-            
-            for(let i = 1; i <= 12; i++) {
-                const isFinal = i > 10;
-                let title = isFinal ? `Kuis Akbar Final ${i-10}` : `Evaluasi Kuis Modul 0${i}`;
-                let statusBadge = '';
-                let btnHtml = '';
-
-                // Check final verification requirement
-                let allTenPerfect = true;
-                for(let k = 1; k <= 10; k++) { if(!appState.quizPerfectScores[k]) allTenPerfect = false; }
-                if(isFinal && allTenPerfect) appState.unlockedQuizzes[i] = true;
-
-                if(!appState.unlockedQuizzes[i]) {
-                    statusBadge = `<span class="bg-slate-100 text-slate-400 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider"><i class="fa-solid fa-lock mr-1"></i> Terkunci</span>`;
-                    btnHtml = `<button class="w-full bg-slate-100 text-slate-400 font-black text-xs py-3 rounded-xl cursor-not-allowed uppercase" disabled>${isFinal ? 'Selesaikan Kuis 1-10 (100%)' : 'Baca Materi Dahulu'}</button>`;
-                } else {
-                    const isPerfect = appState.quizPerfectScores[i] || false;
-                    statusBadge = isPerfect ? 
-                        `<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider"><i class="fa-solid fa-circle-check mr-1"></i> Lolos (100%)</span>` :
-                        `<span class="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i> Terbuka Akses</span>`;
-                    
-                    btnHtml = `<button onclick="startQuizGame(${i})" class="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-black text-xs py-3 rounded-xl transition shadow-md uppercase tracking-wider btn-ripple">Mulai Ujian</button>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = `quiz-grid-item bg-white border-2 ${appState.unlockedQuizzes[i] ? 'border-indigo-100' : 'border-slate-100'} rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all`;
-                card.style.animation = `slideInUp 0.6s ease-out ${(i-1) * 0.08}s forwards`;
-                card.style.opacity = '0';
-                card.innerHTML = `
-                    <div class="mb-5">
-                        <div class="flex justify-between items-center">${statusBadge} <span class="text-xs font-mono font-bold text-slate-400">5 Soal</span></div>
-                        <h3 class="font-extrabold text-slate-900 font-heading text-base leading-snug mt-3">${title}</h3>
-                    </div>
-                    ${btnHtml}
-                `;
-                container.appendChild(card);
-            }
-        }
-
-        function startQuizGame(quizId) {
-            appState.activeQuizId = quizId;
-            appState.activeQuizIndex = 0;
-            appState.activeQuizScore = 0;
-            
-            const isFinal = quizId > 10;
-            document.getElementById('play-quiz-title').innerText = isFinal ? `Kuis Akbar Final ${quizId-10}` : `Kuis Evaluasi Modul 0${quizId}`;
-            
-            showNextQuizQuestion();
-            navigateTo('kuis-play');
-        }
-
-        function showNextQuizQuestion() {
-            const questions = quizDatabase[appState.activeQuizId];
-            if(appState.activeQuizIndex >= questions.length) {
-                finishQuizGame();
-                return;
-            }
-
-            document.getElementById('play-quiz-counter').innerText = `Soal ${appState.activeQuizIndex + 1} / ${questions.length}`;
-            const currentQ = questions[appState.activeQuizIndex];
-
-            // Animate question text change
-            const qText = document.getElementById('play-quiz-question-text');
-            qText.classList.remove('animate-slideInUp');
-            void qText.offsetWidth;
-            qText.classList.add('animate-slideInUp');
-            qText.innerText = currentQ.q;
-
-            const optionsBox = document.getElementById('play-quiz-options');
-            optionsBox.innerHTML = '';
-
-            currentQ.o.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left px-5 py-4 bg-slate-50 hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 rounded-xl text-sm font-bold text-slate-800 transition-all flex justify-between items-center group materi-grid-item";
-                btn.style.animationDelay = `${idx * 0.07}s`;
-                btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-chevron-right text-slate-300 group-hover:text-indigo-500 transition"></i>`;
-                btn.onclick = () => { submitQuizAnswer(idx); };
-                optionsBox.appendChild(btn);
-            });
-        }
-
-        function submitQuizAnswer(selectedIdx) {
-            const questions = quizDatabase[appState.activeQuizId];
-            const currentQ = questions[appState.activeQuizIndex];
-
-            if(selectedIdx === currentQ.a) {
-                appState.activeQuizScore += 20; // 5 questions total, 20 points each = 100 max
-            }
-
-            appState.activeQuizIndex++;
-            showNextQuizQuestion();
-        }
-
-        function finishQuizGame() {
-            const finalScore = appState.activeQuizScore;
-            const quizId = appState.activeQuizId;
-            
-            document.getElementById('quiz-result-score').innerText = `${finalScore} / 100`;
-            const iconBox = document.getElementById('quiz-result-icon');
-            const msgBox = document.getElementById('quiz-result-message');
-
-            if(finalScore === 100) {
-                if(quizId <= 10) appState.quizPerfectScores[quizId] = true;
-                iconBox.className = "w-24 h-24 bg-emerald-50 text-emerald-500 text-5xl rounded-full flex items-center justify-center mx-auto shadow-inner animate-bounce";
-                iconBox.innerHTML = `<i class="fa-solid fa-medal"></i>`;
-                msgBox.innerText = "Maa syaa Allah! Istimewa, nilai sempurna. Anda berhasil menguasai materi modul ini dengan sangat baik.";
-            } else {
-                iconBox.className = "w-24 h-24 bg-rose-50 text-rose-500 text-5xl rounded-full flex items-center justify-center mx-auto shadow-inner";
-                iconBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
-                msgBox.innerText = "Belum sempurna. Anda harus mendapatkan skor 100% (Benar Semua) pada kuis ini untuk membuka akses Kuis Akbar Final.";
-            }
-
-            renderQuizMenuGrid();
-            navigateTo('kuis-result');
-        }
-
-        function renderTrackerItems() {
-            const container = document.getElementById('tracker-items-box');
-            container.innerHTML = '';
-            appState.trackerData.forEach((item, idx) => {
-                const box = document.createElement('div');
-                box.className = `p-4 rounded-2xl border-2 transition-all flex items-start gap-4 cursor-pointer ${item.checked ? 'bg-emerald-50/50 border-emerald-400' : 'bg-white border-slate-100 hover:border-amber-300'}`;
-                box.onclick = () => {
-                    appState.trackerData[idx].checked = !appState.trackerData[idx].checked;
-                    renderTrackerItems();
-                    updateTrackerProgress();
-                };
-                box.innerHTML = `
-                    <div class="mt-0.5 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${item.checked ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 text-transparent'}">
-                        <i class="fa-solid fa-check text-xs font-black"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-900 leading-tight">${item.title}</h4>
-                        <p class="text-[11px] text-slate-400 mt-0.5 font-medium leading-relaxed">${item.desc}</p>
-                    </div>
-                `;
-                container.appendChild(box);
-            });
-        }
-
-        function updateTrackerProgress() {
-            const total = appState.trackerData.length;
-            const checkedCount = appState.trackerData.filter(i => i.checked).length;
-            const pct = Math.round((checkedCount / total) * 100);
-
-            document.getElementById('tracker-percentage').innerText = `${pct}%`;
-            document.getElementById('tracker-bar').style.width = `${pct}%`;
-        }
-
-        function renderKisahPage() {
-            const container = document.getElementById('kisah-container');
-            container.innerHTML = '';
-            kisahData.forEach(k => {
-                const block = document.createElement('div');
-                block.className = "bg-white border border-slate-200 rounded-2xl p-6 shadow-md flex items-start gap-4 relative overflow-hidden group hover:border-rose-400 transition";
-                block.innerHTML = `
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${k.color} text-white flex items-center justify-center text-xl flex-shrink-0 shadow-md transform group-hover:rotate-6 transition">
-                        <i class="fa-solid ${k.icon}"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <h3 class="font-extrabold text-slate-900 text-lg font-heading">${k.nama}</h3>
-                        <span class="text-xs font-black text-rose-600 block uppercase tracking-wider">${k.peran}</span>
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1.5 text-justify font-medium">${k.teks}</p>
-                    </div>
-                `;
-                container.appendChild(block);
-            });
-        }
-
-        // --- AUTOMATIC TIME RESET ENGINE ---
-        function checkAndResetDailyTracker() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const lastSavedDate = localStorage.getItem('aqidah_islam_tracker_date_v2');
-
-            if (lastSavedDate !== todayStr) {
-                appState.trackerData.forEach(item => item.checked = false);
-                localStorage.setItem('aqidah_islam_tracker_date_v2', todayStr);
-            }
-            updateTrackerProgress();
-        }
-
-        // --- AI CHAT ASSISTANT ---
-        function renderChatMessages() {
-            const box = document.getElementById('chat-messages-box');
-            if(!box) return;
-
-            if(appState.chatHistory.length === 0) {
-                box.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center px-6 space-y-3">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-600 text-white flex items-center justify-center text-2xl shadow-lg">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-                        <h3 class="font-extrabold text-slate-800 font-heading text-lg">Halo! Ada yang bisa dibantu?</h3>
-                        <p class="text-xs text-slate-400 font-medium max-w-sm">Kamu bisa bertanya apapun: pelajaran sekolah, tips hidup, pertanyaan seputar Islam, atau sekadar curhat. Ketik pertanyaanmu di bawah.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            box.innerHTML = '';
-            appState.chatHistory.forEach(msg => {
-                const row = document.createElement('div');
-                row.className = `flex animate-fadeIn ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`;
-
-                const bubble = document.createElement('div');
-                bubble.className = `max-w-[85%] sm:max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user' ? 'chat-bubble-user font-semibold' : 'chat-bubble-ai'}`;
-
-                if(msg.role === 'user') {
-                    bubble.innerText = msg.content;
-                } else {
-                    bubble.innerHTML = renderMarkdown(msg.content);
-                }
-
-                row.appendChild(bubble);
-                box.appendChild(row);
-            });
-
-            if(appState.chatLoading) {
-                const row = document.createElement('div');
-                row.className = 'flex justify-start animate-fadeIn';
-                row.innerHTML = `
-                    <div class="chat-bubble-ai px-4 py-3.5 shadow-sm flex items-center gap-1.5">
-                        <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
-                    </div>
-                `;
-                box.appendChild(row);
-            }
-
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function setChatError(message) {
-            const errBox = document.getElementById('chat-error-box');
-            if(!errBox) return;
-            if(message) {
-                errBox.innerText = message;
-                errBox.classList.remove('hidden');
-            } else {
-                errBox.classList.add('hidden');
-                errBox.innerText = '';
-            }
-        }
-
-        async function handleChatSubmit(event) {
-            event.preventDefault();
-            if(appState.chatLoading) return false;
-
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if(!text) return false;
-
-            setChatError(null);
-            appState.chatHistory.push({ role: 'user', content: text });
-            input.value = '';
-            autoResizeChatInput(input);
-            renderChatMessages();
-
-            appState.chatLoading = true;
-            const sendBtn = document.getElementById('chat-send-btn');
-            sendBtn.disabled = true;
-            sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            renderChatMessages();
-
-            try {
-                if(!GEMINI_API_KEY || GEMINI_API_KEY === "MASUKKAN_API_KEY_GEMINI_KAMU_DI_SINI") {
-                    throw new Error("API key belum diisi. Buka kode index.html dan isi GEMINI_API_KEY.");
-                }
-
-                const systemPrompt = "Kamu adalah asisten AI ramah bernama 'Tanya AI' di dalam aplikasi edukasi Aqidah Islam untuk remaja. Jawab pertanyaan apapun dari pengguna (sekolah, sains, kehidupan sehari-hari, maupun agama Islam) dengan jelas, akurat, sopan, dan bersahabat. Gunakan Bahasa Indonesia. Untuk pertanyaan agama, sampaikan dengan hati-hati, rujuk pada Al-Qur'an/Hadis bila relevan, dan sarankan untuk berkonsultasi dengan ustadz/guru agama untuk masalah hukum yang kompleks. Gunakan format markdown sederhana (paragraf, daftar, bold) bila membantu kejelasan.";
-
-                const contents = appState.chatHistory.map(m => ({
-                    role: m.role === 'assistant' ? 'model' : 'user',
-                    parts: [{ text: m.content }]
-                }));
-
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            contents: contents,
-                            systemInstruction: { parts: [{ text: systemPrompt }] },
-                            generationConfig: { maxOutputTokens: 1000 }
-                        })
-                    }
-                );
-
-                if(!response.ok) {
-                    throw new Error(`Permintaan gagal (status ${response.status})`);
-                }
-
-                const data = await response.json();
-                const aiText = (data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('\n') || "Maaf, AI tidak memberikan jawaban. Silakan coba lagi.").trim();
-
-                appState.chatHistory.push({ role: 'assistant', content: aiText });
-            } catch (err) {
-                console.error('Chat AI error:', err);
-                if(err.message && err.message.includes("API key belum diisi")) {
-                    setChatError('API key Gemini belum diisi. Buka file index.html, cari GEMINI_API_KEY, dan masukkan key kamu.');
-                } else {
-                    setChatError('Terjadi kesalahan saat menghubungi AI. Periksa koneksi internet Anda dan coba lagi.');
-                }
-            } finally {
-                appState.chatLoading = false;
-                sendBtn.disabled = false;
-                sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                renderChatMessages();
-                input.focus();
-            }
-
-            return false;
-        }
-
-        function autoResizeChatInput(el) {
-            el.style.height = 'auto';
-            el.style.height = Math.min(el.scrollHeight, 128) + 'px';
-        }
-
-        // --- INITIALIZER ---
-        window.onload = function() {
-            refreshMoodBooster();
-            renderMateriGrid();
-            renderTrackerItems();
-            renderQuizMenuGrid();
-            renderKisahPage();
-            checkAndResetDailyTracker();
-            renderChatMessages();
-
-            const chatInput = document.getElementById('chat-input');
-            if(chatInput) {
-                chatInput.addEventListener('input', () => autoResizeChatInput(chatInput));
-                chatInput.addEventListener('keydown', (e) => {
-                    if(e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        document.getElementById('chat-form').requestSubmit();
-                    }
-                });
-            }
-        };
-    </script>
-</body>
-</html>
+        {/* Notification toggle */}
+        <button
+          onClick={handleToggleNotif}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 text-sm font-bold transition-all ${
+            notifEnabled
+              ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 text-emerald-700 dark:text-emerald-300"
+              : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-emerald-300"
+          }`}
+        >
+          <span>{notifEnabled ? "🔔" : "🔕"}</span>
+          {notifEnabled ? "Notif Aktif" : "Aktifkan Notif"}
+        </button>
+      </div>
+
+      {/* Overall progress card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden"
+      >
+        <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full" />
+        <div className="absolute -right-4 -bottom-12 w-52 h-52 bg-white/5 rounded-full" />
+        <div className="relative z-10 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-emerald-100 font-bold text-sm mb-1 uppercase tracking-wider">
+              Progress Hari Ini
+            </p>
+            <p className="text-5xl font-extrabold">
+              {count}
+              <span className="text-2xl text-emerald-200">/{total}</span>
+            </p>
+            <p className="text-emerald-100 text-sm font-medium mt-1">
+              {getMotivation()}
+            </p>
+          </div>
+          <div className="w-24 h-24 relative">
+            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+              <circle
+                cx="18" cy="18" r="15.9"
+                fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="3"
+              />
+              <circle
+                cx="18" cy="18" r="15.9"
+                fill="none" stroke="white" strokeWidth="3"
+                strokeDasharray={`${percent} ${100 - percent}`}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-white font-extrabold text-lg">{percent}%</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Target Harian */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border-2 border-slate-100 dark:border-slate-700 shadow-sm space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <p className="font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              🎯 Target Harian
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              Selesaikan {target} amalan hari ini
+            </p>
+          </div>
+          {/* Target selector */}
+          <div className="flex gap-2">
+            {TARGET_OPTIONS.map((t) => (
+              <button
+                key={t}
+                onClick={() => dispatch({ type: "SET_DAILY_TARGET", target: t })}
+                className={`w-9 h-9 rounded-xl text-sm font-extrabold transition-all ${
+                  target === t
+                    ? "bg-amber-500 text-white shadow-md shadow-amber-500/30"
+                    : "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-600"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Target progress bar */}
+        <div>
+          <div className="flex items-center justify-between text-xs font-bold mb-1.5">
+            <span className="text-slate-500 dark:text-slate-400">
+              {count} / {target} amalan
+            </span>
+            <span
+              className={
+                targetReached
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-amber-600 dark:text-amber-400"
+              }
+            >
+              {targetReached ? "✅ Target Tercapai!" : `${target - count} lagi`}
+            </span>
+          </div>
+          <div className="w-full h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${targetPct}%` }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className={`h-full rounded-full ${
+                targetReached
+                  ? "bg-gradient-to-r from-emerald-400 to-teal-500"
+                  : "bg-gradient-to-r from-amber-400 to-orange-400"
+              }`}
+            />
+          </div>
+        </div>
+
+        {targetReached && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl px-4 py-3"
+          >
+            <span className="text-xl">🎉</span>
+            <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+              MasyaAllah! Target harian kamu tercapai. Istiqomah adalah kunci surga!
+            </p>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Checklist */}
+      <div className="space-y-3">
+        {trackerItems.map((item, idx) => {
+          const done = checked.has(item.id);
+          const isTarget = !done && count === target - 1;
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              onClick={() => dispatch({ type: "TOGGLE_TRACKER", id: item.id })}
+              className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all select-none ${
+                done
+                  ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 shadow-md"
+                  : isTarget
+                  ? "bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700 shadow-sm"
+                  : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:border-teal-300 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 shadow-sm"
+              }`}
+            >
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-all ${
+                  done
+                    ? "bg-emerald-500 shadow-lg shadow-emerald-500/30"
+                    : isTarget
+                    ? "bg-amber-100 dark:bg-amber-900/40 border-2 border-amber-300"
+                    : "bg-slate-50 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600"
+                }`}
+              >
+                {done ? "✓" : item.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p
+                  className={`font-extrabold text-sm transition-colors ${
+                    done
+                      ? "text-emerald-800 dark:text-emerald-300 line-through"
+                      : "text-slate-900 dark:text-white"
+                  }`}
+                >
+                  {item.title}
+                  {isTarget && (
+                    <span className="ml-2 text-xs font-black bg-amber-400 text-white rounded-full px-2 py-0.5">
+                      1 lagi!
+                    </span>
+                  )}
+                </p>
+                <p
+                  className={`text-xs font-medium transition-colors ${
+                    done ? "text-emerald-600 dark:text-emerald-500" : "text-slate-400 dark:text-slate-500"
+                  }`}
+                >
+                  {item.desc}
+                </p>
+              </div>
+              <div
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                  done
+                    ? "bg-emerald-500 border-emerald-500"
+                    : "border-slate-200 dark:border-slate-600"
+                }`}
+              >
+                {done && <span className="text-white text-xs font-black">✓</span>}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {count === total && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-6 text-white text-center shadow-xl"
+        >
+          <p className="text-3xl mb-2">🏆</p>
+          <p className="font-extrabold text-lg">Allahu Akbar! Semua amalan terpenuhi!</p>
+          <p className="text-sm text-amber-100 font-medium mt-1">
+            Semoga Allah menerima semua amalmu hari ini. Istiqomah adalah kunci!
+          </p>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+import { createContext, useContext, useReducer, useEffect, ReactNode } from "react";
+import { trackerItems } from "../data/tracker";
+
+export type View =
+  | "beranda"
+  | "materi"
+  | "materi-detail"
+  | "tracker"
+  | "kuis"
+  | "kuis-play"
+  | "kuis-result"
+  | "kisah"
+  | "progress"
+  | "flashcard"
+  | "tantangan";
+
+interface AppState {
+  view: View;
+  currentModuleId: number | null;
+  unlockedQuizzes: Set<number>;
+  quizPerfectScores: Set<number>;
+  quizBestScores: Record<number, number>;
+  quizCooldowns: Record<number, number>;
+  activeQuizId: number | null;
+  activeQuizIndex: number;
+  activeQuizScore: number;
+  finalScore: number;
+  trackerChecked: Set<number>;
+  lastTrackerDate: string;
+  darkMode: boolean;
+  readModules: Set<number>;
+  kisahFavorites: Set<number>;
+  tantanganHighScore: number;
+  dailyTarget: number;
+  notifEnabled: boolean;
+}
+
+type Action =
+  | { type: "NAV"; view: View }
+  | { type: "OPEN_MODULE"; id: number }
+  | { type: "START_QUIZ"; quizId: number }
+  | { type: "ANSWER_QUIZ"; correct: boolean }
+  | { type: "FINISH_QUIZ" }
+  | { type: "TOGGLE_TRACKER"; id: number }
+  | { type: "RESET_TRACKER" }
+  | { type: "TOGGLE_DARK" }
+  | { type: "TOGGLE_KISAH_FAVORITE"; id: number }
+  | { type: "SET_TANTANGAN_SCORE"; score: number }
+  | { type: "SET_DAILY_TARGET"; target: number }
+  | { type: "SET_NOTIF_ENABLED"; enabled: boolean };
+
+const COOLDOWN_MS = 5 * 60 * 1000;
+const STORAGE_KEY = "aqidah-islam-v2";
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+const defaultState: AppState = {
+  view: "beranda",
+  currentModuleId: null,
+  unlockedQuizzes: new Set(),
+  quizPerfectScores: new Set(),
+  quizBestScores: {},
+  quizCooldowns: {},
+  activeQuizId: null,
+  activeQuizIndex: 0,
+  activeQuizScore: 0,
+  finalScore: 0,
+  trackerChecked: new Set(),
+  lastTrackerDate: todayStr(),
+  darkMode: false,
+  readModules: new Set(),
+  kisahFavorites: new Set(),
+  tantanganHighScore: 0,
+  dailyTarget: 5,
+  notifEnabled: false,
+};
+
+function serializeState(state: AppState): string {
+  return JSON.stringify({
+    unlockedQuizzes: Array.from(state.unlockedQuizzes),
+    quizPerfectScores: Array.from(state.quizPerfectScores),
+    quizBestScores: state.quizBestScores,
+    quizCooldowns: state.quizCooldowns,
+    trackerChecked: Array.from(state.trackerChecked),
+    lastTrackerDate: state.lastTrackerDate,
+    darkMode: state.darkMode,
+    readModules: Array.from(state.readModules),
+    kisahFavorites: Array.from(state.kisahFavorites),
+    tantanganHighScore: state.tantanganHighScore,
+    dailyTarget: state.dailyTarget,
+    notifEnabled: state.notifEnabled,
+  });
+}
+
+function loadState(): AppState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState;
+    const p = JSON.parse(raw);
+    const today = todayStr();
+    const trackerChecked =
+      p.lastTrackerDate === today
+        ? new Set<number>(p.trackerChecked ?? [])
+        : new Set<number>();
+    return {
+      ...defaultState,
+      unlockedQuizzes: new Set<number>(p.unlockedQuizzes ?? []),
+      quizPerfectScores: new Set<number>(p.quizPerfectScores ?? []),
+      quizBestScores: p.quizBestScores ?? {},
+      quizCooldowns: p.quizCooldowns ?? {},
+      trackerChecked,
+      lastTrackerDate: today,
+      darkMode: p.darkMode ?? false,
+      readModules: new Set<number>(p.readModules ?? []),
+      kisahFavorites: new Set<number>(p.kisahFavorites ?? []),
+      tantanganHighScore: p.tantanganHighScore ?? 0,
+      dailyTarget: p.dailyTarget ?? 5,
+      notifEnabled: p.notifEnabled ?? false,
+    };
+  } catch {
+    return defaultState;
+  }
+}
+
+function reducer(state: AppState, action: Action): AppState {
+  switch (action.type) {
+    case "NAV":
+      return { ...state, view: action.view };
+    case "OPEN_MODULE": {
+      const unlocked = new Set(state.unlockedQuizzes);
+      unlocked.add(action.id);
+      const readModules = new Set(state.readModules);
+      readModules.add(action.id);
+      return {
+        ...state,
+        view: "materi-detail",
+        currentModuleId: action.id,
+        unlockedQuizzes: unlocked,
+        readModules,
+      };
+    }
+    case "START_QUIZ":
+      return {
+        ...state,
+        view: "kuis-play",
+        activeQuizId: action.quizId,
+        activeQuizIndex: 0,
+        activeQuizScore: 0,
+        finalScore: 0,
+      };
+    case "ANSWER_QUIZ":
+      return {
+        ...state,
+        activeQuizIndex: state.activeQuizIndex + 1,
+        activeQuizScore: action.correct
+          ? state.activeQuizScore + 5
+          : state.activeQuizScore,
+      };
+    case "FINISH_QUIZ": {
+      const perfect = new Set(state.quizPerfectScores);
+      const quizId = state.activeQuizId!;
+      const score = state.activeQuizScore;
+      if (score === 100 && quizId <= 10) perfect.add(quizId);
+      const bestScores = { ...state.quizBestScores };
+      bestScores[quizId] = Math.max(bestScores[quizId] ?? 0, score);
+      const cooldowns = { ...state.quizCooldowns };
+      if (score < 100) {
+        cooldowns[quizId] = Date.now() + COOLDOWN_MS;
+      } else {
+        delete cooldowns[quizId];
+      }
+      const unlocked = new Set(state.unlockedQuizzes);
+      const allPerfect = Array.from({ length: 10 }, (_, i) => i + 1).every((i) =>
+        perfect.has(i)
+      );
+      if (allPerfect) {
+        unlocked.add(11);
+        unlocked.add(12);
+      }
+      return {
+        ...state,
+        view: "kuis-result",
+        finalScore: score,
+        quizPerfectScores: perfect,
+        quizBestScores: bestScores,
+        quizCooldowns: cooldowns,
+        unlockedQuizzes: unlocked,
+      };
+    }
+    case "TOGGLE_TRACKER": {
+      const checked = new Set(state.trackerChecked);
+      if (checked.has(action.id)) checked.delete(action.id);
+      else checked.add(action.id);
+      return { ...state, trackerChecked: checked, lastTrackerDate: todayStr() };
+    }
+    case "RESET_TRACKER":
+      return { ...state, trackerChecked: new Set(), lastTrackerDate: todayStr() };
+    case "TOGGLE_DARK":
+      return { ...state, darkMode: !state.darkMode };
+    case "TOGGLE_KISAH_FAVORITE": {
+      const favs = new Set(state.kisahFavorites);
+      if (favs.has(action.id)) favs.delete(action.id);
+      else favs.add(action.id);
+      return { ...state, kisahFavorites: favs };
+    }
+    case "SET_TANTANGAN_SCORE":
+      return {
+        ...state,
+        tantanganHighScore: Math.max(state.tantanganHighScore, action.score),
+      };
+    case "SET_DAILY_TARGET":
+      return { ...state, dailyTarget: action.target };
+    case "SET_NOTIF_ENABLED":
+      return { ...state, notifEnabled: action.enabled };
+    default:
+      return state;
+  }
+}
+
+const AppContext = createContext<{
+  state: AppState;
+  dispatch: React.Dispatch<Action>;
+} | null>(null);
+
+export function AppProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(reducer, undefined, loadState);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", state.darkMode);
+  }, [state.darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, serializeState(state));
+  }, [state]);
+
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+
+export function useApp() {
+  const ctx = useContext(AppContext);
+  if (!ctx) throw new Error("useApp must be used within AppProvider");
+  return ctx;
+}
+
+export { trackerItems, COOLDOWN_MS };
